@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Главная</title>
+</head>
+<body>
+   <div id="navbar-container"></div>
+  <h1>Добро пожаловать в моё портфолио</h1>
+  <nav>
+    <ul>
+      <li><a href="projects.html">Проекты</a></li>
+      <li><a href="about.html">Обо мне</a></li>
+      <li><a href="contact.html">Контакты</a></li>
+      <li><a href="admin.html">Админка</a></li>
+    </ul>
+  </nav>
+  <script>
+  fetch('navbar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('navbar-container').innerHTML = html;
+      const links = document.querySelectorAll('.navbar a');
+      const path = location.pathname.split('/').pop();
+      links.forEach(link => {
+        if (link.getAttribute('href') === path) {
+          link.classList.add('active');
+        }
+      });
+    });
+</script>
+
+</body>
+</html>

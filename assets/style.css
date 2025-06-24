@@ -1,0 +1,11 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #fff;
+  color: #111;
+  padding: 2rem;
+}
+
+h1 {
+  font-size: 2rem;
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Админка — Добавить проект</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+   <div id="navbar-container"></div>
+  <h1>Добавить новый проект</h1>
+  <form id="projectForm" enctype="multipart/form-data">
+    <label>Название проекта:
+      <input type="text" name="title" required>
+    </label>
+
+    <label>Описание:
+      <textarea name="description" rows="4" required></textarea>
+    </label>
+
+    <label>Обложка:
+      <input type="file" name="coverImage" accept="image/*" required>
+    </label>
+
+    <label>Галерея (можно несколько):
+      <input type="file" name="galleryImages" accept="image/*" multiple>
+    </label>
+
+    <button type="submit">Загрузить</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    document.getElementById('projectForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('/api/projects', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById('status').textContent = '✅ Проект успешно добавлен';
+          form.reset();
+        } else {
+          document.getElementById('status').textContent = '❌ Ошибка: ' + (data.error || 'Неизвестная ошибка');
+        }
+      } catch (err) {
+        document.getElementById('status').textContent = '❌ Ошибка отправки: ' + err.message;
+      }
+    });
+  </script>
+  <script>
+  fetch('navbar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('navbar-container').innerHTML = html;
+      const links = document.querySelectorAll('.navbar a');
+      const path = location.pathname.split('/').pop();
+      links.forEach(link => {
+        if (link.getAttribute('href') === path) {
+          link.classList.add('active');
+        }
+      });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Проекты</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    .project {
+      margin-bottom: 40px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 20px;
+    }
+    .project img {
+      max-width: 150px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <h1>Проекты</h1>
+  <div id="projectsContainer"></div>
+
+  <script>
+    async function loadProjects() {
+      try {
+        const response = await fetch('/api/projects');
+        const projects = await response.json();
+
+        if (!Array.isArray(projects)) {
+          throw new Error('Некорректный формат данных: ожидался массив');
+        }
+
+        const container = document.getElementById('projectsContainer');
+        container.innerHTML = '';
+
+        projects.forEach(project => {
+          const projectDiv = document.createElement('div');
+          projectDiv.className = 'project';
+
+          const title = document.createElement('h2');
+          title.textContent = project.title;
+          projectDiv.appendChild(title);
+
+          const description = document.createElement('p');
+          description.textContent = project.description;
+          projectDiv.appendChild(description);
+
+          if (project.coverImage) {
+            const coverImg = document.createElement('img');
+            coverImg.src = project.coverImage;
+            projectDiv.appendChild(coverImg);
+          }
+
+          if (Array.isArray(project.galleryImages)) {
+            project.galleryImages.forEach(imageUrl => {
+              const img = document.createElement('img');
+              img.src = imageUrl;
+              projectDiv.appendChild(img);
+            });
+          }
+
+          container.appendChild(projectDiv);
+        });
+      } catch (error) {
+        console.error('Ошибка при загрузке проектов:', error);
+      }
+    }
+
+    loadProjects();
+  </script>
+  <script>
+  fetch('navbar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('navbar-container').innerHTML = html;
+      const links = document.querySelectorAll('.navbar a');
+      const path = location.pathname.split('/').pop();
+      links.forEach(link => {
+        if (link.getAttribute('href') === path) {
+          link.classList.add('active');
+        }
+      });
+    });
+</script>
+
+
+</body>
+</html>
