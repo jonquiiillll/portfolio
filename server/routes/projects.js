@@ -88,6 +88,19 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+      return res.status(404).json({ message: 'Проект не найден' });
+    }
+    res.json(project);
+  } catch (err) {
+    console.error('Ошибка при получении проекта:', err);
+    res.status(500).json({ message: 'Ошибка сервера' });
+  }
+});
+
 // Получение всех проектов
 router.get('/', async (req, res) => {
   try {

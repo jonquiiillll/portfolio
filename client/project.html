@@ -1,45 +1,83 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Проект</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    h1 {
+      margin-bottom: 5px;
+    }
+    img {
+      max-width: 400px;
+      display: block;
+      margin: 10px 0;
+    }
+    #backBtn {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      background: #eee;
+      padding: 8px 16px;
+      border-radius: 4px;
+      color: black;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    #backBtn:hover {
+      background: #ddd;
+    }
+  </style>
 </head>
 <body>
-   <div id="navbar-container"></div>
-  <div id="project"></div>
+  <div id="navbar-container"></div>
+
+  <a id="backBtn" href="projects.html">← Назад к проектам</a>
+
+  <h1 id="title"></h1>
+  <p id="year"></p>
+  <p id="description"></p>
+  <div id="gallery"></div>
+
   <script>
     const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
+    const projectId = params.get('id');
 
-    fetch(`http://localhost:5000/api/projects`)
-      .then(res => res.json())
-      .then(projects => {
-        const project = projects.find(p => p._id === id);
-        if (project) {
-          document.getElementById('project').innerHTML = `
-            <h1>${project.title}</h1>
-            <img src="${project.image}" width="400" />
-            <p>${project.description}</p>
-            <a href="${project.url}" target="_blank">Ссылка на проект</a>
-            <br/><a href="projects.html">← Назад</a>
-          `;
-        }
+    async function loadProject() {
+      try {
+        const res = await fetch(`/api/projects/${projectId}`);
+        const project = await res.json();
+
+        document.getElementById('title').textContent = project.title;
+        document.getElementById('year').textContent = `Год: ${project.year}`;
+        document.getElementById('description').textContent = project.description;
+
+        // Показываем только изображения из galleryImages
+        project.galleryImages.forEach((imgUrl) => {
+          const img = document.createElement('img');
+          img.src = imgUrl;
+          document.getElementById('gallery').appendChild(img);
+        });
+
+      } catch (err) {
+        console.error('Ошибка загрузки проекта:', err);
+        document.body.innerHTML = '<p>Ошибка загрузки проекта</p>';
+      }
+    }
+
+    loadProject();
+  </script>
+
+  <script>
+    // Подгружаем navbar
+    fetch('navbar.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('navbar-container').innerHTML = html;
       });
   </script>
-  <script>
-  fetch('navbar.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('navbar-container').innerHTML = html;
-      const links = document.querySelectorAll('.navbar a');
-      const path = location.pathname.split('/').pop();
-      links.forEach(link => {
-        if (link.getAttribute('href') === path) {
-          link.classList.add('active');
-        }
-      });
-    });
-</script>
-
 </body>
 </html>
