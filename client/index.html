@@ -2,33 +2,82 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Главная</title>
+  <link rel="stylesheet" href="/assets/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script defer src="/assets/scripts/carousel.js"></script>
 </head>
 <body>
-   <div id="navbar-container"></div>
-  <h1>Добро пожаловать в моё портфолио</h1>
-  <nav>
-    <ul>
-      <li><a href="projects.html">Проекты</a></li>
-      <li><a href="about.html">Обо мне</a></li>
-      <li><a href="contact.html">Контакты</a></li>
-      <li><a href="admin.html">Админка</a></li>
-    </ul>
-  </nav>
-  <script>
-  fetch('navbar.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('navbar-container').innerHTML = html;
-      const links = document.querySelectorAll('.navbar a');
-      const path = location.pathname.split('/').pop();
-      links.forEach(link => {
-        if (link.getAttribute('href') === path) {
-          link.classList.add('active');
-        }
-      });
-    });
-</script>
+  <header class="header">
+    <div class="container">
+      <div class="logo">главная</div>
+      <nav class="nav">
+        <ul>
+  <a href="projects.html">Проекты</a>
+  <a href="about.html">Обо мне</a>
+  <a href="contact.html">Контакты</a>
+        </ul>
+        <div class="lang">RU ENG</div>
+        <button class="btn-order">Заказать проект</button>
+      </nav>
+      <div class="burger" id="burger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </header>
 
+  <main class="hero-carousel">
+    
+    <div class="frame">
+      <div class="gradient top"></div>
+      <div class="socials">
+        <a href="#"><img src="/assets/images/whatsapp.svg" alt="Whatsapp"></a>
+        <a href="#"><img src="/assets/images/vk.svg" alt="VK"></a>
+      </div>
+          <div class="gradient top"></div>
+    <div class="gradient bottom"></div>
+      <div class="slides">
+        <img src="/assets/images/slide1.jpg" alt="Slide 1" class="active">
+        <img src="/assets/images/slide2.jpg" alt="Slide 2">
+        <img src="/assets/images/slide3.jpg" alt="Slide 3">
+        <img src="/assets/images/slide4.jpg" alt="Slide 4">
+        <img src="/assets/images/slide5.jpg" alt="Slide 5">
+        <img src="/assets/images/slide6.jpg" alt="Slide 6">
+      </div>
+      <div class="gradient bottom"></div>
+      
+      <div class="indicators">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <div class="controls bottom-center">
+        <button class="prev">←</button>
+        <button class="next">→</button>
+      </div>
+    </div>
+    
+  </main>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="close-btn" id="closeMenu">✖</div>
+  <ul>
+  <a href="index.html">Главная</a>
+  <a href="projects.html">Проекты</a>
+  <a href="about.html">Обо мне</a>
+  <a href="contact.html">Контакты</a>
+    <li><button class="btn-order">Заказать проект</button></li>
+  </ul>
+</div>
+
+  <script>
+    document.querySelector('.burger').addEventListener('click', () => {
+      document.querySelector('.mobile-menu').classList.toggle('open');
+    });
+  </script>
 </body>
 </html>

@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/fonts/fonts.css">
+  <link rel="stylesheet" href="/assets/main.css">
+
   <title>Админка</title>
 </head>
 <body>
-
+ <div id="navbar-container"></div>
   <h1>Админ-панель</h1>
 
   <!-- Форма логина -->
@@ -66,6 +71,13 @@
 
   <!-- Подключаем admin.js -->
   <script src="admin.js"></script>
-
+  <script>
+    // Подгружаем navbar
+    fetch('navbar.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('navbar-container').innerHTML = html;
+      });
+  </script>
 </body>
 </html>
