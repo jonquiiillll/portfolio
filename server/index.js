@@ -14,8 +14,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Подключение к MongoDB
-mongoose.connect('mongodb://localhost:27017/portfolio', {
+require('dotenv').config(); // добавь в самом верху файла
+
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
