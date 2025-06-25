@@ -4,7 +4,29 @@
   padding: 0;
   box-sizing: border-box;
 }
+.admin-projects-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 40px;
+}
 
+.admin-project {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.admin-project img {
+  width: 80px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+}
 body {
   font-family: 'Montserrat', sans-serif;
   background-color: #fff;
