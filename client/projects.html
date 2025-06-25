@@ -1,103 +1,94 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="/assets/fonts/fonts.css">
-  <link rel="stylesheet" href="/assets/main.css">
-
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Проекты</title>
-  <style>
-
-    .project {
-      margin-bottom: 30px;
-    }
-    .project img {
-      max-width: 200px;
-      display: block;
-      margin-bottom: 10px;
-    }
-    .project a {
-      text-decoration: none;
-      color: black;
-    }
-    .project a:hover h2 {
-      text-decoration: underline;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/fonts/fonts.css">
+  <link rel="stylesheet" href="/assets/main-projects.css">
 </head>
-<body>
+<body class="fade-in">
   <div id="navbar-container"></div>
 
-  <h1>Проекты</h1>
+  <div class="projects-wrapper">
+    <div class="breadcrumbs">Главная — <span class="gray">Проекты</span></div>
+    <h1 class="projects-title">Проекты</h1>
 
-  <div id="category-filters">
-    <button data-category="все">Все</button>
-    <button data-category="жилые">Жилые</button>
-    <button data-category="общественные">Общественные помещения</button>
-    <button data-category="коттеджи">Коттеджи</button>
+    <div class="category-filters">
+      <button class="active" data-category="все">Все</button>
+      <button data-category="жилые">Жилые помещения</button>
+      <button data-category="общественные">Общественные помещения</button>
+      <button data-category="коттеджи">Коттеджи</button>
+    </div>
+
+    <div id="project-years-container">
+      <!-- Контейнер, в который будут добавляться блоки по годам -->
+    </div>
   </div>
 
-  <div id="projectList"></div>
-
   <script>
-    // Подгружаем navbar
+    // Навбар
     fetch('navbar.html')
       .then(res => res.text())
       .then(html => {
         document.getElementById('navbar-container').innerHTML = html;
-        const links = document.querySelectorAll('.navbar a');
-        const path = location.pathname.split('/').pop();
-        links.forEach(link => {
-          if (link.getAttribute('href') === path) {
-            link.classList.add('active');
-          }
-        });
       });
 
-    // Загружаем проекты с сервера по категории
+    // Отрисовка проектов
     async function loadProjects(category = 'все') {
-      try {
-        const res = await fetch(`/api/projects?category=${encodeURIComponent(category)}`);
-        const projects = await res.json();
+      const container = document.getElementById('project-years-container');
+      container.innerHTML = '';
 
-        const container = document.getElementById('projectList');
-        container.innerHTML = '';
+      const res = await fetch(`/api/projects?category=${encodeURIComponent(category)}`);
+      const projects = await res.json();
 
-        if (projects.length === 0) {
-          container.innerHTML = '<p>Нет проектов в этой категории.</p>';
-          return;
-        }
+      const projectsByYear = {};
 
-        projects.forEach((project) => {
-          const div = document.createElement('div');
-          div.className = 'project';
+      projects.forEach(project => {
+        const year = project.year || 'Без года';
+        if (!projectsByYear[year]) projectsByYear[year] = [];
+        projectsByYear[year].push(project);
+      });
 
-          div.innerHTML = `
-            <a href="project.html?id=${project._id}">
-              ${project.coverImage ? `<img src="${project.coverImage}" alt="Обложка проекта">` : ''}
-              <h2>${project.title}</h2>
-            </a>
+      const sortedYears = Object.keys(projectsByYear).sort((a, b) => b - a);
+
+      sortedYears.forEach(year => {
+        const yearBlock = document.createElement('div');
+        yearBlock.classList.add('year-block');
+
+        const title = document.createElement('h2');
+        title.className = 'year-title';
+        title.textContent = year;
+        yearBlock.appendChild(title);
+
+        const grid = document.createElement('div');
+        grid.className = 'project-grid';
+
+        projectsByYear[year].forEach(project => {
+          const card = document.createElement('a');
+          card.href = `project.html?id=${project._id}`;
+          card.className = 'project-card';
+          card.innerHTML = `
+            <img src="${project.coverImage}" alt="${project.title}" />
+            <div class="project-name">${project.title} <span class="arrow">↗</span></div>
           `;
-
-          container.appendChild(div);
+          grid.appendChild(card);
         });
-      } catch (err) {
-        console.error('Ошибка загрузки проектов:', err);
-        document.getElementById('projectList').innerHTML = '<p>Ошибка загрузки проектов</p>';
-      }
+
+        yearBlock.appendChild(grid);
+        container.appendChild(yearBlock);
+      });
     }
 
-    // Слушаем клики по фильтрам
-    document.getElementById('category-filters').addEventListener('click', (e) => {
+    document.querySelector('.category-filters').addEventListener('click', (e) => {
       if (e.target.tagName === 'BUTTON') {
-        const category = e.target.dataset.category;
-        loadProjects(category);
+        document.querySelectorAll('.category-filters button').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+        loadProjects(e.target.dataset.category);
       }
     });
 
-    // Загружаем все проекты при старте
     loadProjects();
   </script>
 </body>

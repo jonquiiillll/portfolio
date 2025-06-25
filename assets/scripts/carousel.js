@@ -51,8 +51,27 @@ closeMenu.addEventListener('click', () => {
 });
 
 
+
+
   // Мобильное меню
   burger.addEventListener('click', () => {
     mobileMenu.classList.toggle('open');
   });
-});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const links = document.querySelectorAll('a[href]');
+  links.forEach(link => {
+    const url = link.getAttribute('href');
+    if (...) {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.href = url;
+        }, 300);
+      });
+    }
+  });
+}); 
+
+
