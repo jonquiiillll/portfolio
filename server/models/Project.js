@@ -5,6 +5,15 @@ const projectSchema = new mongoose.Schema({
   description: String,
   coverImage: String,
   galleryImages: [String],
+  category: {
+    type: String,
+    enum: ['жилые', 'общественные', 'коттеджи'],
+    required: true
+  },
+  year: {
+    type: Number,
+    required: true
+  }
 });
 
 module.exports = mongoose.model('Project', projectSchema);

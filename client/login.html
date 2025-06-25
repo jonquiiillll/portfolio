@@ -1,0 +1,25 @@
+<form id="loginForm">
+  <input id="username" placeholder="Логин">
+  <input id="password" type="password">
+  <button type="submit">Войти</button>
+</form>
+
+<script>
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value
+      })
+    });
+
+    if (res.ok) {
+      window.location.href = "/admin.html";
+    } else {
+      alert("Ошибка входа");
+    }
+  });
+</script>

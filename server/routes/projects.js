@@ -6,6 +6,7 @@ const Project = require('../models/Project');
 
 const router = express.Router();
 
+
 // Создание папок, если их нет
 const coversDir = path.join(__dirname, '..', 'uploads', 'covers');
 const galleryDir = path.join(__dirname, '..', 'uploads', 'gallery');
@@ -39,7 +40,7 @@ router.post('/', upload.fields([
   { name: 'galleryImages', maxCount: 10 }
 ]), async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, category, year } = req.body;
 
     const coverImagePath = req.files['coverImage']
       ? `/uploads/covers/${req.files['coverImage'][0].filename}`
@@ -52,14 +53,38 @@ const newProject = new Project({
   title,
   description,
   coverImage: coverImagePath,
-  galleryImages: galleryPaths
+  galleryImages: galleryPaths,
+  category,
+  year: parseInt(year, 10)
 });
+
 
     await newProject.save();
     res.status(201).json(newProject);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Ошибка при создании проекта' });
+  }
+});
+router.get('/', async (req, res) => {
+  try {
+    const { category, year } = req.query;
+
+    const filter = {};
+
+    if (category && category !== 'все') {
+      filter.category = category;
+    }
+
+    if (year) {
+      filter.year = parseInt(year, 10);
+    }
+
+    const projects = await Project.find(filter).sort({ year: -1 });
+    res.json(projects);
+  } catch (err) {
+    console.error('Ошибка при получении проектов:', err);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 });
 

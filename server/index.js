@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const authRoutes = require('./routes/auth');
+const authenticateToken = require('./middleware/authMiddleware');
 
 // 💡 вот здесь правильный путь:
 const projectRoutes = require('./routes/projects');
@@ -32,6 +34,9 @@ app.use(express.static(path.join(__dirname, '../client'))); // отдаём HTML
 
 // Роуты
 app.use('/api/projects', require('./routes/projects'));
+app.use('/api/auth', require('./routes/auth'));
+
+app.use('/api/projects', authenticateToken, require('./routes/projects'));
 
 // Заглушка для всех остальных путей (например, если не SPA — можно убрать)
 app.get('/:fileName', (req, res, next) => {
