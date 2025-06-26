@@ -29,26 +29,32 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// 🔹 GET все проекты
+// 🔹 GET все проекты с фильтрацией
 router.get('/', async (req, res) => {
   try {
-    const projects = await Project.find().sort({ year: -1 });
+    const { category } = req.query;
+    const filter = {};
+    if (category && category !== 'все') {
+      filter.category = category;
+    }
+
+    const projects = await Project.find(filter).sort({ year: -1 });
     res.json(projects);
   } catch (err) {
     res.status(500).json({ error: 'Ошибка при получении проектов' });
   }
 });
 
-router.get('/', async (req, res) => {
+
+// 🔹 GET проект по ID
+router.get('/:id', async (req, res) => {
   try {
-    const { category, year } = req.query;
-    const filter = {};
-    if (category && category !== 'все') filter.category = category;
-    if (year) filter.year = parseInt(year, 10);
-    const projects = await Project.find(filter).sort({ year: -1 });
-    res.json(projects);
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ error: 'Проект не найден' });
+    res.json(project);
   } catch (err) {
-    res.status(500).json({ error: 'Ошибка при получении проектов' });
+    console.error(err);
+    res.status(500).json({ error: 'Ошибка при получении проекта' });
   }
 });
 
