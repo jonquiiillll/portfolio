@@ -1,22 +1,25 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-// Заменить на .env и нормальную систему хранения паролей в продакшене
 const ADMIN = {
   username: 'admin',
   password: 'password123'
 };
 
 router.post('/login', (req, res) => {
-  const { username, password } = req.body;
+  console.log('Before login:', req.session);
+  req.session.user = { username: req.body.username };
+  console.log('After login:', req.session);
+  res.json({ ok: true });
+});
 
-  if (username === ADMIN.username && password === ADMIN.password) {
-    const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    return res.json({ token });
-  }
 
-  res.status(401).json({ message: 'Неверные учетные данные' });
+
+router.post('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie('connect.sid');
+    res.json({ message: 'Выход выполнен' });
+  });
 });
 
 module.exports = router;
