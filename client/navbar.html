@@ -1,32 +1,25 @@
-<nav class="navbar">
-  <a href="index.html">Главная</a>
-  <a href="projects.html">Проекты</a>
-  <a href="about.html">Обо мне</a>
-  <a href="contact.html">Контакты</a>
+<header class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="logo"><span class="logo-black">Pavlova</span><span class="logo-light">Design</span></a>
 
-</nav>
+    <nav class="desktop-menu">
+      <a href="/services.html">Услуги</a>
+      <a href="/projects.html">Проекты</a>
+      <a href="/about.html">Обо мне</a>
+      <a href="/contacts.html">Контакты</a>
+    </nav>
 
-<style>
-  .navbar {
-    display: flex;
-    gap: 20px;
-    background: #111;
-    padding: 10px 20px;
-  }
+    <button id="burger" class="burger-button" aria-label="Открыть меню">
+      <span class="burger-icon"></span>
+    </button>
+  </div>
 
-  .navbar a {
-    color: white;
-    text-decoration: none;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
-  }
-
-  .navbar a:hover {
-    opacity: 1;
-  }
-
-  .navbar a.active {
-    opacity: 1;
-    font-weight: bold;
-  }
-</style>
+  <div id="mobileMenu" class="mobile-menu hidden">
+    <button id="closeMobile" class="close-mobile" aria-label="Закрыть меню">✕</button>
+    <a href="/services.html">Услуги</a>
+    <a href="/projects.html">Проекты</a>
+    <a href="/about.html">Обо мне</a>
+    <a href="/contacts.html">Контакты</a>
+    <a href="/order.html" class="order-button">Заказать проект</a>
+  </div>
+</header>

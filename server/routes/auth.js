@@ -29,3 +29,11 @@ router.post('/login', (req, res) => {
 
 router.post('/logout', (req, res) => {
   console.log('📤 [LOGOUT] Запрос получен');
+  req.session.destroy(() => {
+    console.log('🧼 Сессия уничтожена');
+    res.clearCookie('connect.sid');
+    res.json({ message: 'Выход выполнен' });
+  });
+});
+
+module.exports = router;
