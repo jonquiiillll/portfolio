@@ -32,12 +32,9 @@ app.use(session({
 }));
 
 // Подключение к MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('✅ MongoDB подключена'))
+  .catch(err => console.error('❌ Ошибка подключения к MongoDB:', err));
 
 // Мидлвары
 app.use(cors({
