@@ -3,15 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/fonts/fonts.css">
   <link rel="stylesheet" href="/assets/main.css">
-
   <title>Админка</title>
 </head>
 <body>
- <div id="navbar-container"></div>
+  <div id="navbar-container"></div>
   <h1>Админ-панель</h1>
 
   <!-- Форма логина -->
@@ -21,19 +19,25 @@
     <button type="submit">Войти</button>
   </form>
 
-  <!-- Форма добавления проекта (изначально скрыта) -->
+  <!-- Приветствие + выход -->
+  <div id="userInfo" style="display:none;">
+    <p id="welcome"></p>
+    <button id="logoutBtn">Выйти</button>
+  </div>
+
+  <!-- Форма добавления проекта -->
   <form id="projectForm" style="display: none;" enctype="multipart/form-data">
     <input type="text" name="title" placeholder="Название проекта" required />
     <input type="text" name="description" placeholder="Описание проекта" />
 
     <select name="category" required>
-  <option value="">Выберите категорию</option>
-  <option value="жилые">Жилые</option>
-  <option value="общественные">Общественные</option>
-  <option value="коттеджи">Коттеджи</option>
-</select>
+      <option value="">Выберите категорию</option>
+      <option value="жилые">Жилые</option>
+      <option value="общественные">Общественные</option>
+      <option value="коттеджи">Коттеджи</option>
+    </select>
 
-<input type="number" name="year" placeholder="Год" min="1900" max="2099" required />
+    <input type="number" name="year" placeholder="Год" min="1900" max="2099" required />
     
     <label>Обложка проекта:</label>
     <input type="file" name="coverImage" accept="image/*" required />
@@ -44,12 +48,27 @@
     <button type="submit">Добавить проект</button>
   </form>
 
-<h2>Список проектов</h2>
-<div id="projectsList" class="admin-projects-container"></div>
+  <h2>Список проектов</h2>
+  <div id="projectsList" class="admin-projects-container"></div>
 
-
-  <!-- Скрипт логина -->
+  <!-- Скрипт логина + проверки -->
   <script>
+    async function checkSession() {
+      const res = await fetch('/api/checkSession', { credentials: 'include' });
+      const data = await res.json();
+
+      if (data.sessionExists) {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('projectForm').style.display = 'block';
+        document.getElementById('userInfo').style.display = 'block';
+        document.getElementById('welcome').textContent = `Здравствуйте, ${data.username || 'админ'}`;
+      } else {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('projectForm').style.display = 'none';
+        document.getElementById('userInfo').style.display = 'none';
+      }
+    }
+
     document.getElementById('loginForm').addEventListener('submit', async e => {
       e.preventDefault();
       const username = document.getElementById('username').value;
@@ -58,19 +77,28 @@
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ username, password })
       });
 
       const data = await res.json();
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        alert('Успешный вход!');
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('projectForm').style.display = 'block';
+
+      if (res.ok && data.ok) {
+        await checkSession();
       } else {
         alert('Ошибка входа');
       }
     });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      await checkSession();
+    });
+
+    checkSession(); // при загрузке
   </script>
 
   <!-- Подключаем admin.js -->
