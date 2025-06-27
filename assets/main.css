@@ -20,6 +20,55 @@
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
+body {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+body.fade-out {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+body.fade-in {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+}
+.project-item {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.project-item.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.project-item.fade-in {
+  opacity: 0;
+  animation: fadeProjectIn 0.4s ease forwards;
+}
+
+@keyframes fadeProjectIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
 
 .admin-project img {
   width: 80px;

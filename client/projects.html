@@ -10,13 +10,15 @@
   <link rel="stylesheet" href="/assets/navbar.css"> <!-- если вынесешь в файл -->
 
 </head>
-<body class="fade-in">
+<body>
   <div id="navbar-container"></div>
 
 
   <div class="projects-wrapper">
     <div class="breadcrumbs">Главная — <span class="gray">Проекты</span></div>
-    <h1 class="projects-title">Проекты</h1>
+
+    <div class="head">
+    <div class="projects-title">Проекты</div>
 
     <div class="category-filters">
       <button class="active" data-category="все">Все</button>
@@ -24,84 +26,11 @@
       <button data-category="общественные">Общественные помещения</button>
       <button data-category="коттеджи">Коттеджи</button>
     </div>
-
+</div>
     <div id="project-years-container">
       <!-- Контейнер, в который будут добавляться блоки по годам -->
     </div>
   </div>
-
-  <script>
-    // Навбар
-    fetch('navbar.html')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('navbar-container').innerHTML = html;
-      });
-
-    // Отрисовка проектов
-    async function loadProjects(category = 'все') {
-      const container = document.getElementById('project-years-container');
-      container.innerHTML = '';
-
-      const res = await fetch(`/api/projects?category=${encodeURIComponent(category)}`);
-      const projects = await res.json();
-
-      const projectsByYear = {};
-
-      projects.forEach(project => {
-        const year = project.year || 'Без года';
-        if (!projectsByYear[year]) projectsByYear[year] = [];
-        projectsByYear[year].push(project);
-      });
-
-      const sortedYears = Object.keys(projectsByYear).sort((a, b) => b - a);
-
-      sortedYears.forEach(year => {
-        const yearBlock = document.createElement('div');
-        yearBlock.classList.add('year-block');
-
-        const title = document.createElement('h2');
-        title.className = 'year-title';
-        title.textContent = year;
-        yearBlock.appendChild(title);
-
-        const grid = document.createElement('div');
-        grid.className = 'project-grid';
-
-        projectsByYear[year].forEach(project => {
-          const card = document.createElement('a');
-          card.href = `project.html?id=${project._id}`;
-          card.className = 'project-card';
-          card.innerHTML = `
-            <img src="${project.coverImage}" alt="${project.title}" />
-            <div class="project-name">${project.title} <span class="arrow">↗</span></div>
-          `;
-          grid.appendChild(card);
-        });
-
-        yearBlock.appendChild(grid);
-        container.appendChild(yearBlock);
-      });
-    }
-
-    document.querySelector('.category-filters').addEventListener('click', (e) => {
-      if (e.target.tagName === 'BUTTON') {
-        document.querySelectorAll('.category-filters button').forEach(btn => btn.classList.remove('active'));
-        e.target.classList.add('active');
-        loadProjects(e.target.dataset.category);
-      }
-    });
-
-    loadProjects();
-  </script>
-  <script src="/assets/navbar.js"></script> <!-- если вынесешь в файл -->
-<script>
-  fetch('navbar.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('navbar-container').innerHTML = html;
-    });
-</script>
 
 <script>
   fetch('/navbar.html')
@@ -127,6 +56,9 @@
       }
     });
 </script>
+
+<script src="/assets/transition.js"></script>
+<script src="/assets/projects.js"></script>
 
 
 </body>
