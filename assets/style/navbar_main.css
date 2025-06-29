@@ -3,11 +3,12 @@
     font-family: 'Montserrat', sans-serif;
     padding: 30px;
     margin: auto;
-    background: #f9f8f4;
+    position: relative;
+    /* display: flex; */
     z-index: 1000;
   }
   .desktop-menu a.active {
-  color: #000;
+  color: #ffffff;
   font-weight: 600;
 }
 
@@ -36,15 +37,15 @@
     gap: 40px;
   }
   .desktop-menu a {
-    color: #aaa;
+    color: #ffffff;
     text-decoration: none;
     font-size: 16px;
     transition: color 0.2s;
   }
   .desktop-menu a.active,
   .desktop-menu a:hover {
-    color: #000;
-    font-weight: 500;
+    color: #c4c4c4;
+
   }
   .burger-button {
     background: none;
