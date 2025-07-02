@@ -5,18 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/fonts/fonts.css">
+  <link rel="stylesheet" href="/assets/admin.css">
   <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/navbar.css">
   <title>Админка</title>
 </head>
 <body>
   <div id="navbar-container"></div>
-  <h1>Админ-панель</h1>
+    <script src="/assets/navbar.js"></script>
+  <h1 class="title_page">Админ-панель</h1>
 
   <!-- Форма логина -->
   <form id="loginForm">
-    <input type="text" placeholder="Логин" id="username" required />
-    <input type="password" placeholder="Пароль" id="password" required />
-    <button type="submit">Войти</button>
+    <div class="login_class">
+    <input type="text" class="text_field" placeholder="Логин" id="username" required />
+    <input type="password" class="text_field" placeholder="Пароль" id="password" required />
+    <button class="submit_login" type="submit">Войти</button>
+    </div>
   </form>
 
   <!-- Приветствие + выход -->
@@ -27,28 +32,31 @@
 
   <!-- Форма добавления проекта -->
   <form id="projectForm" style="display: none;" enctype="multipart/form-data">
-    <input type="text" name="title" placeholder="Название проекта" required />
-    <input type="text" name="description" placeholder="Описание проекта" />
+    <div class="new_project">
+    <input class="text_field" type="text" name="title" placeholder="Название проекта" required />
+    <input class="text_field" type="text" name="description" placeholder="Описание проекта" />
 
-    <select name="category" required>
+    <select class="text_field" name="category" required>
       <option value="">Выберите категорию</option>
       <option value="жилые">Жилые</option>
       <option value="общественные">Общественные</option>
       <option value="коттеджи">Коттеджи</option>
     </select>
 
-    <input type="number" name="year" placeholder="Год" min="1900" max="2099" required />
+    <input class="text_field"  type="number" name="year" placeholder="Год" min="1900" max="2099" required />
     
     <label>Обложка проекта:</label>
-    <input type="file" name="coverImage" accept="image/*" required />
+    <input class="text_field" type="file" name="coverImage" accept="image/*" required />
 
     <label>Изображения галереи:</label>
-    <input type="file" name="galleryImages" accept="image/*" multiple />
+    <input class="text_field" type="file" name="galleryImages" accept="image/*" multiple />
 
-    <button type="submit">Добавить проект</button>
+    <button class="text_field" type="submit">Добавить проект</button>
+    </div>
   </form>
 
-  <h2>Список проектов</h2>
+<h2 id="projectsTitle" style="display: none;">Список проектов</h2>
+
   <div id="projectsList" class="admin-projects-container"></div>
 
   <!-- Скрипт логина + проверки -->

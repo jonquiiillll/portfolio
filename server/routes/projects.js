@@ -1,3 +1,4 @@
+
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -29,7 +30,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// 🔹 GET все проекты с фильтрацией
 router.get('/', async (req, res) => {
   try {
     const { category } = req.query;
@@ -37,7 +37,6 @@ router.get('/', async (req, res) => {
     if (category && category !== 'все') {
       filter.category = category;
     }
-
     const projects = await Project.find(filter).sort({ year: -1 });
     res.json(projects);
   } catch (err) {
@@ -45,8 +44,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-
-// 🔹 GET проект по ID
 router.get('/:id', async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -58,30 +55,20 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-
-// 🔹 POST
-router.post('/', auth, upload.fields([
-  { name: 'coverImage', maxCount: 1 },
-  { name: 'galleryImages', maxCount: 10 }
-]), async (req, res) => {
+router.post('/', auth, upload.any(), async (req, res) => {
   try {
     const { title, description = '', category, year } = req.body;
 
-    const coverImagePath = req.files['coverImage']
-      ? `/uploads/covers/${req.files['coverImage'][0].filename}`
-      : '';
-
-    const galleryPaths = req.files['galleryImages']
-      ? req.files['galleryImages'].map(f => `/uploads/gallery/${f.filename}`)
-      : [];
+    const cover = req.files.find(f => f.fieldname === 'coverImage');
+    const gallery = req.files.filter(f => f.fieldname === 'galleryImages');
 
     const newProject = new Project({
       title,
       description,
       category,
       year: parseInt(year),
-      coverImage: coverImagePath,
-      galleryImages: galleryPaths
+      coverImage: cover ? `/uploads/covers/${cover.filename}` : '',
+      galleryImages: gallery.map(f => `/uploads/gallery/${f.filename}`)
     });
 
     await newProject.save();
@@ -92,12 +79,9 @@ router.post('/', auth, upload.fields([
   }
 });
 
-// 🔹 PUT обновление
-router.put('/:id', auth, upload.fields([
-  { name: 'coverImage', maxCount: 1 }
-]), async (req, res) => {
+router.put('/:id', auth, upload.any(), async (req, res) => {
   try {
-    const { title, description = '', category, year } = req.body;
+    const { title, description = '', category, year, existingGallery } = req.body;
 
     const updateData = {
       title,
@@ -106,11 +90,21 @@ router.put('/:id', auth, upload.fields([
       year: parseInt(year)
     };
 
-if (req.files['coverImage']) {
-  const filename = req.files['coverImage'][0].filename;
-  updateData.coverImage = `/uploads/covers/${filename}`;
-}
+    const cover = req.files.find(f => f.fieldname === 'coverImage');
+    const gallery = req.files.filter(f => f.fieldname === 'galleryImages');
 
+    if (cover) {
+      updateData.coverImage = `/uploads/covers/${cover.filename}`;
+    }
+
+    console.log('📥 body.existingGallery:', req.body.existingGallery);
+    console.log('🖼 gallery files:', gallery.map(f => f.filename));
+
+    const existing = existingGallery ? JSON.parse(existingGallery) : [];
+    const newGallery = gallery.map(f => `/uploads/gallery/${f.filename}`);
+    updateData.galleryImages = [...existing, ...newGallery];
+
+    console.log('🧷 final galleryImages:', updateData.galleryImages);
 
     const updated = await Project.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!updated) return res.status(404).json({ message: 'Проект не найден' });
@@ -122,7 +116,6 @@ if (req.files['coverImage']) {
   }
 });
 
-// 🔹 DELETE
 router.delete('/:id', auth, async (req, res) => {
   try {
     const deleted = await Project.findByIdAndDelete(req.params.id);

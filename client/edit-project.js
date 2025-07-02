@@ -1,4 +1,5 @@
 
+// ...весь код как был до...
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const projectId = urlParams.get('id');
@@ -6,12 +7,127 @@ window.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('editForm');
   const coverInput = document.getElementById('coverInput');
   const imageToCrop = document.getElementById('imageToCrop');
-  const cropContainer = document.getElementById('cropContainer');
   const cropBtn = document.getElementById('cropBtn');
+  const cancelCrop = document.getElementById('cancelCrop');
   const croppedPreview = document.getElementById('croppedPreview');
+  const overlay = document.getElementById('overlay');
+
+  const currentCover = document.getElementById('currentCover');
+  const changeCoverBtn = document.getElementById('changeCoverBtn');
+  const uploadNewCoverBtn = document.getElementById('uploadNewCoverBtn');
+  const galleryList = document.getElementById('galleryList');
+  const galleryInput = document.getElementById('galleryInput');
 
   let cropper = null;
   let croppedBlob = null;
+  let existingGallery = [];
+  let newGalleryImages = [];
+  let originalCoverUrl = "";
+
+  changeCoverBtn.addEventListener('click', () => {
+    if (originalCoverUrl) {
+      imageToCrop.src = originalCoverUrl;
+      overlay.style.display = 'flex';
+      if (cropper) cropper.destroy();
+      cropper = new Cropper(imageToCrop, {
+        aspectRatio: 3 / 4,
+        viewMode: 1,
+        autoCropArea: 1,
+      });
+    }
+  });
+
+  uploadNewCoverBtn.addEventListener('click', () => {
+    coverInput.click();
+  });
+
+  coverInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    imageToCrop.src = url;
+    overlay.style.display = 'flex';
+
+    if (cropper) cropper.destroy();
+    cropper = new Cropper(imageToCrop, {
+      aspectRatio: 3 / 4,
+      viewMode: 1,
+      autoCropArea: 1,
+    });
+  });
+
+  cancelCrop.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    if (cropper) cropper.destroy();
+    cropper = null;
+  });
+
+  cropBtn.addEventListener('click', () => {
+    if (!cropper) return;
+
+    setTimeout(() => {
+      const canvas = cropper.getCroppedCanvas({
+        width: 600,
+        height: 800,
+        imageSmoothingQuality: 'high'
+      });
+
+      canvas.toBlob((blob) => {
+        croppedBlob = blob;
+
+        const url = URL.createObjectURL(blob);
+        currentCover.src = url;
+
+        cropper.destroy();
+        cropper = null;
+        overlay.style.display = 'none';
+      }, 'image/jpeg', 0.95);
+    }, 100);
+  });
+
+  galleryInput.addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+      const url = URL.createObjectURL(file);
+      addGalleryImage(url, null, file);
+    });
+  });
+
+  function addGalleryImage(src, id, file) {
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+
+    const img = document.createElement('img');
+    img.src = src.startsWith('blob:') || src.startsWith('/uploads') ? src : '/uploads/gallery/' + src;
+    img.style.maxWidth = '100px';
+    img.style.borderRadius = '4px';
+
+    const btn = document.createElement('button');
+    btn.textContent = '×';
+    btn.style.position = 'absolute';
+    btn.style.top = '0';
+    btn.style.right = '0';
+    btn.style.background = 'red';
+    btn.style.color = 'white';
+    btn.style.border = 'none';
+    btn.style.cursor = 'pointer';
+
+    btn.onclick = () => {
+      galleryList.removeChild(wrapper);
+      if (id) {
+        existingGallery = existingGallery.filter(existingId => existingId !== id);
+      }
+    };
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(btn);
+    galleryList.appendChild(wrapper);
+
+    if (!id && file) {
+      newGalleryImages.push(file);
+    }
+  }
 
   async function loadProject() {
     const res = await fetch(`/api/projects/${projectId}`);
@@ -25,57 +141,18 @@ window.addEventListener('DOMContentLoaded', () => {
     form.description.value = project.description || '';
     form.category.value = project.category || '';
     form.year.value = project.year || '';
-  }
 
-  coverInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    originalCoverUrl = project.coverImage.startsWith('/uploads') 
+      ? project.coverImage 
+      : '/uploads/covers/' + project.coverImage;
 
-    const url = URL.createObjectURL(file);
-    imageToCrop.src = url;
-    cropContainer.style.display = 'block';
+    currentCover.src = originalCoverUrl;
 
-    if (cropper) cropper.destroy();
-    cropper = new Cropper(imageToCrop, {
-      aspectRatio: 3 / 4,
-      viewMode: 1,
-      autoCropArea: 1,
+    existingGallery = [...project.galleryImages];
+    existingGallery.forEach(fullPath => {
+      addGalleryImage(fullPath, fullPath, null);
     });
-  });
-
-cropBtn.addEventListener('click', () => {
-  if (!cropper) {
-    alert('Сначала выбери изображение для обрезки.');
-    return;
   }
-
-  // Делаем небольшую задержку, чтобы cropper успел отрендерить canvas
-  setTimeout(() => {
-    const canvas = cropper.getCroppedCanvas({
-      width: 600,
-      height: 800,
-      imageSmoothingQuality: 'high'
-    });
-
-    if (!canvas) {
-      alert('Ошибка обрезки изображения.');
-      return;
-    }
-
-    canvas.toBlob((blob) => {
-      croppedBlob = blob;
-
-      const ctx = croppedPreview.getContext('2d');
-      croppedPreview.width = canvas.width;
-      croppedPreview.height = canvas.height;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(canvas, 0, 0);
-      croppedPreview.style.display = 'block';
-      cropContainer.style.display = 'none';
-    }, 'image/jpeg', 0.95);
-  }, 100); // подождём 100мс на отрисовку
-});
-
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -90,6 +167,12 @@ cropBtn.addEventListener('click', () => {
     if (croppedBlob) {
       formData.append('coverImage', croppedBlob, 'cover.jpg');
     }
+
+    for (let file of newGalleryImages) {
+      formData.append('galleryImages', file);
+    }
+
+    formData.append('existingGallery', JSON.stringify(existingGallery));
 
     const res = await fetch(`/api/projects/${projectId}`, {
       method: 'PUT',

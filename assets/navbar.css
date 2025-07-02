@@ -16,7 +16,7 @@
     max-width: 1200px;
     margin: auto;
     /* margin: 60px auto; */
-    padding: 0 20px;
+    padding: 0 23px;
     justify-content: space-between;
     align-items: center;
   }
@@ -64,6 +64,7 @@
   .burger-icon::after {
     content: '';
     position: absolute;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
     width: 24px;
     height: 2px;
     background: #000;
@@ -76,22 +77,41 @@
     top: 8px;
   }
   .mobile-menu {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     align-items: flex-start;
+    align-content: center;
     gap: 25px;
     padding: 40px 20px;
     background: #fff;
     position: fixed;
     inset: 0;
     z-index: 999;
-    font-size: 24px;
+    font-size: 24px; */
   }
   .mobile-menu a {
     text-decoration: none;
     color: #000;
+    font-size: 50px;
     font-weight: 400;
   }
+  .list_menu {
+display: grid;
+transition: 2s linear ;
+top: 50%;
+    flex-direction: column;
+    align-items: flex-start;
+    align-content: center;
+    gap: 25px;
+    padding: 40px 20px;
+    background: #fff;
+    position: fixed;
+    inset: 0;
+    align-content: center;
+    z-index: 999;
+    font-size: 24px;
+}
+
   .order-button {
     font-size: 22px;
     font-weight: 500;
@@ -105,6 +125,11 @@
   .close-mobile {
     background: none;
     border: none;
+
+    top: 20px;
+    position: absolute;
+    z-index: 1000;
+    right:20px;
     font-size: 32px;
     align-self: flex-end;
     cursor: pointer;
@@ -120,4 +145,15 @@
     .burger-button {
       display: block;
     }
+
+      .navbar {
+    font-family: 'Montserrat', sans-serif;
+        margin: auto;
+    padding: 0%;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    margin-top: 40px;
+    background: #f9f8f4;
+    z-index: 1000;
+  }
   }

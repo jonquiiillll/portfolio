@@ -167,10 +167,11 @@ body.fade-in {
 }
 .year-block {
   display: flex;
-  flex-direction: column;
-  gap: 40px;
+  margin-bottom: 20px;
+  padding-bottom: 40px;
+  margin-top: 50px;
   border-bottom: #8d8c8c 2px solid;
-  margin-bottom: 60px;
+
 }
 
 .project-row {
@@ -252,9 +253,13 @@ body.fade-in {
   .project-card {
     width: calc(40% - 10px);
   }
+  .year-title {
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
   .project-row {
   display:flex;
-  align-items: flex-end;
+  /* align-items: flex-end; */
   margin-bottom: 40px;
 }
 
@@ -265,10 +270,23 @@ body.fade-in {
  border-bottom: none;
   margin-bottom: 60px;
 }
+    .navbar-container {
+      margin-bottom: 20px;
+    }
   .project-grid {
-    justify-content: space-between;
+   justify-content: flex-end;
   }
-
+.projects-title {
+  font-size: clamp(50px, 12vw, 130px);
+  font-weight: 600;
+  color: #313131;
+margin-left: 0px !important;
+  margin-bottom: 30px;
+  margin-left: -10px;
+}
+.breadcrumbs {
+  margin: 5px;
+}
   .year-title {
     min-width: auto;
     margin-right: 20px;
