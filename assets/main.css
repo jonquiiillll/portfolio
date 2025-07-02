@@ -6,11 +6,15 @@
 }
 .admin-projects-container {
   display: flex;
+  
   flex-direction: column;
   gap: 20px;
   margin-top: 40px;
 }
-
+.social_icons {
+  width: 36px;
+    height: auto;
+}
 .admin-project {
   display: flex;
   align-items: center;
@@ -411,7 +415,11 @@ body {
   .nav {
     display: none;
   }
-
+.controls.bottom-center {
+    position: absolute;
+    bottom: 30px;
+    left: 80%;
+}
   .burger, .mobile-menu {
     display: flex;
   }
@@ -440,8 +448,8 @@ body {
 }
 
 .socials img {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
 }
 
 /* === АДАПТИВ === */

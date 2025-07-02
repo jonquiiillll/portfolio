@@ -14,13 +14,15 @@
 
     #backBtn {
       display: inline-block;
-      margin: 20px 20px 0 20px;
+      /* margin: 20px 20px 0 20px; */
       font-weight: 600;
       text-decoration: none;
       color: #1a1a1a;
       font-size: 16px;
     }
-
+    .text-cont{
+      width: 60%;
+    }
     .project-container {
       max-width: 1200px;
       margin: 0 auto;
@@ -53,7 +55,7 @@
   bottom: 0;
   left: 0;
   width: 100vw;
-  height: 50vh;
+    height: 70vh;
   overflow: hidden;
 }
 
@@ -175,7 +177,7 @@
     }
 
   .NamingArrow {
-    width: 30%;
+    width: 40%;
     display: flex;
     align-items: center;
   }
@@ -187,7 +189,9 @@
     overflow-y: auto;
     height: auto;
   }
-
+    .text-cont{
+      width: 100%;
+    }
   .project-container {
     height: auto;
   }
@@ -195,7 +199,8 @@
   .gallery-wrapper {
     position: relative;
     height: auto;
-    padding: 20px;
+    margin: 0 auto;
+  
     overflow: visible;
   }
 
@@ -203,36 +208,67 @@
     flex-direction: column;
     overflow: visible;
     gap: 20px;
+    width: auto;
+    margin: 0 auto;
+
     cursor: default;
   }
-
+.arrow-container{
+  display: none;
+}
   #gallery img {
-    width: 100%;
+    width: 90%;
     height: auto;
     margin-bottom: 10px;
   }
-
+      .project-container {
+        margin-bottom: 30px;
+      }
+.project-description {
+    font-size: 20px;}      
+.text {
+  display: block;
+  padding: 5px;
+  margin-top: 50px;
+  margin-bottom: 60px;
+  max-width: 1200px;
+  margin-top: 50px !important;
+  align-items: flex-start;
+  margin: 0 auto;
+  justify-content: space-between;
+}
   .arrow-btn {
     display: none;
   }
 
   .project-title {
-    font-size: 22px;
+    font-size: 24px;
   }
-
-  #gallery img {
-    width: 100%;
-    border-radius: 5px;
-    height: auto;
-    margin-bottom: 10px;
-  }
-
+.NamingArrow {
+  display: block;
+  width: 100%;
+}
+.close-btn {
+  font-size: 60px;
+      right: 20px;
+}
+.nav-btn.left {
+  bottom: 0%;
+  position: absolute;
+        top: 92%;
+}
+.nav-btn.right {
+  bottom: 0%;
+  position: absolute;
+        top: 92%;
+}
   .arrow-btn {
     display: none;
   }
 
   .project-title {
-    font-size: 22px;
+    font-size: 24px;
+    width: 100%;
   }
 
     }
