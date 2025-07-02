@@ -1,36 +1,129 @@
-<!-- about.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="/assets/fonts/fonts.css">
-  <link rel="stylesheet" href="/assets/main.css">
-
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Обо мне</title>
-</head>
-<body>
-   <div id="navbar-container"></div>
-  <h1>Обо мне</h1>
-  <p>Здесь будет информация обо мне</p>
-  <a href="index.html">← Назад на главную</a>
-  <script>
-  fetch('navbar.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('navbar-container').innerHTML = html;
-      const links = document.querySelectorAll('.navbar a');
-      const path = location.pathname.split('/').pop();
-      links.forEach(link => {
-        if (link.getAttribute('href') === path) {
-          link.classList.add('active');
-        }
-      });
-    });
-</script>
-<script src="/assets/transition.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/fonts/fonts.css">
+  <link rel="stylesheet" href="/assets/main-projects.css">
+   <link rel="stylesheet" href="/assets/style/about.css">
+  <link rel="stylesheet" href="/assets/style/services.css">
+  <link rel="stylesheet" href="/assets/navbar.css"> <!-- если вынесешь в файл -->
 
+</head>
+  <div id="navbar-container"></div>
+    <script src="/assets/navbar.js"></script>
+    <div class="name_photo">
+      <div class="description">
+        <div>
+        <p class="number">+ 7 (964)-358-05-87</p>
+        <p class="email">olgapavlova244@yandex.ru</p>
+        </div>
+        <div>
+        <p class="name">Павлова Ольга</p>
+        <p class="work">Дизайнер интерьеров</p>
+        </div>
+
+      </div>
+
+        <img class="photo" src="/assets/images/portrait.png" alt="">
+
+    </div>
+    <div class="description_about">
+      <p class="text_about">Меня зовут Ольга Павлова, я архитектор и дизайнер интерьеров.
+
+Уже 25 лет я занимаюсь проектированием жилых и общественных пространств. Основным принципом моей работы является создание интерьеров с уникальным смыслом, который меняет и улучшает качество жизни человека.
+
+</p>
+      <p class="text_about">Каждый проект, это всегда совместное сотворчество с заказчиком , где поиски, рассуждения, и четко сформулированные цели приводят к уникальной идее, которая и составляет основную концепцию всего проекта.</p>
+    </div>
+    <div class="service_title">
+     <h1 class="title_about">Чем я занимаюсь</h1>
+    <div class="bottom_steps">
+  <div class="service">
+    <div class="service-title">
+      <span>Дизайн-проект жилого пространства</span>
+      <span class="icon">+</span>
+    </div>
+    <div class="service-content">
+      <div class="carousel">
+        <div class="step">
+          <h3>Этап 1</h3>
+          <p>Обмеры помещения с фотофиксацией</p>
+          <p>Интервьюирование Заказчика</p>
+          <p>Стилистические решения и цветовая концепция</p>
+        </div>
+        <div class="step">
+          <h3>Этап 2</h3>
+          <p>Планы, привязка розеток, кондиционеров, освещение</p>
+          <p>Схемы раскладки, маркировка дверей, развертки</p>
+        </div>
+        <div class="step">
+          <h3>Этап 3</h3>
+          <p>3D-графика, наглядная визуализация каждого помещения</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="service">
+    <div class="service-title">
+      <span>Авторский надзор</span>
+      <span class="icon">+</span>
+    </div>
+    <div class="service-content">
+      <div class="carousel">
+        <div class="step">
+          <h3>Что входит</h3>
+          <p>Контроль за соответствием проекта</p>
+          <p>Корректировка решений</p>
+          <p>Работа с подрядчиками</p>
+        </div>
+        <div class="step">
+          <h3>Периодичность</h3>
+          <p>Выезды 1-2 раза в неделю</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="service">
+    <div class="service-title">
+      <span>Комплектация</span>
+      <span class="icon">+</span>
+    </div>
+    <div class="service-content">
+      <div class="carousel">
+        <div class="step">
+          <h3>Что делаем</h3>
+          <p>Поиск, подбор, закупка отделочных материалов и мебели</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="service">
+    <div class="service-title">
+      <span>Примеры чертежей</span>
+      <span class="icon">+</span>
+    </div>
+    <div class="service-content">
+      <div class="carousel">
+        <div class="step">
+          <h3>Планы</h3>
+          <p>План расстановки мебели</p>
+        </div>
+        <div class="step">
+          <h3>Развертки</h3>
+          <p>Развертки стен по помещениям</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+<script src="/assets/scripts/services.js"></script>
+<body>
 </body>
 </html>
