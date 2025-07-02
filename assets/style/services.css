@@ -1,0 +1,112 @@
+ * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      background-color: #f7f6f2;
+      color: #222;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        height: 90vh;
+        padding: 30px;
+    }
+    .bottom_steps {
+        margin-top: 50px;
+        width: 100%;
+    }
+    h1 {
+      font-size: 72px;
+     
+    }
+    .service_title {
+      margin-top: 50px !important;
+      max-width: 1155px;
+      margin: 0 auto;
+      margin-bottom: -30px;
+    }
+    .title_about {
+      font-size: 30px;
+      margin-top: 40px;
+      margin-bottom: -30px;
+    }
+    .service {
+      border-bottom: 1px solid #eee;
+      padding: 20px 0;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .service-title {
+      font-size: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .icon {
+      font-size: 32px;
+      transition: transform 0.3s ease;
+    }
+
+    .icon.rotate {
+      transform: rotate(45deg);
+    }
+
+    .service-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease, padding 0.5s ease;
+    }
+
+    .service.open .service-content {
+      padding-top: 20px;
+      max-height: 1000px;
+    }
+
+    .carousel {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 10px;
+    }
+
+    .carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .step {
+      min-width: 300px;
+      flex: 0 0 auto;
+      background: white;
+      border: 1px solid #ddd;
+      padding: 20px;
+    }
+
+    .step h3 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    .step p {
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    /* Мобилка */
+    @media (max-width: 768px) {
+      .carousel {
+        flex-direction: column;
+        overflow-x: hidden;
+        gap: 20px;
+      }
+
+      .step {
+        width: 100%;
+      }
+    }
