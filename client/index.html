@@ -1,35 +1,39 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Главная</title>
   <link rel="stylesheet" href="/assets/style/main.css" />
-  <link rel="stylesheet" href="/assets/style.css" />
-    <link rel="stylesheet" href="/assets/style/navbar_main.css">
-    <link rel="stylesheet" href="/assets/style/project.css">
-  
+  <!-- <link rel="stylesheet" href="/assets/style.css" /> -->
+  <link rel="stylesheet" href="/assets/style/navbar_main.css">
+  <!-- <link rel="stylesheet" href="/assets/style/project.css"> -->
+
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script defer src="/assets/scripts/carousel.js"></script>
   <script src="/assets/scripts/preloader.js"></script>
 </head>
+
 <body>
-<div id="preloader">
-  <img class="preloader_gif" src="/assets/images/giphy.gif" alt="Загрузка..." />
-</div>
+  <div id="preloader">
+    <img class="preloader_gif" src="/assets/images/giphy.gif" alt="Загрузка..." />
+  </div>
 
 
-  <main class="hero-carousel"> 
+  <main class="hero-carousel">
     <div class="frame">
-        <div id="navbar-container"></div>
-  <script src="/assets/navbar.js"></script>
+      <div id="navbar-container"></div>
+      <script src="/assets/navbar_main.js"></script>
       <div class="gradient top"></div>
       <div class="socials">
-        <a href="https://wa.me/79643580587"><img src="/assets/images/whatsapp.svg" class="social_icons" alt="Whatsapp"></a>
-        <a href="https://t.me/Pavlova_pro_design"><img src="/assets/images/telegram.svg" class="social_icons" alt="VK"></a>
+        <a href="https://wa.me/79643580587"><img src="/assets/images/whatsapp.svg" class="social_icons"
+            alt="Whatsapp"></a>
+        <a href="https://t.me/Pavlova_pro_design"><img src="/assets/images/telegram.svg" class="social_icons"
+            alt="VK"></a>
       </div>
-          <div class="gradient top"></div>
-    <div class="gradient bottom"></div>
+      <div class="gradient top"></div>
+      <div class="gradient bottom"></div>
       <div class="slides">
         <img src="/assets/images/slide1.png" alt="Slide 1" class="active">
         <img src="/assets/images/slide2.png" alt="Slide 2">
@@ -39,7 +43,7 @@
         <img src="/assets/images/slide6.png" alt="Slide 6">
       </div>
       <div class="gradient bottom"></div>
-      
+
       <div class="indicators">
         <span class="dot active"></span>
         <span class="dot"></span>
@@ -53,10 +57,10 @@
         <button class="next">→</button>
       </div>
     </div>
-    
+
   </main>
 
-<div class="mobile-menu" id="mobileMenu">
+  <!-- <div class="mobile-menu" id="mobileMenu">
   <div class="close-btn" id="closeMenu">✖</div>
   <ul>
   <a href="index.html">Главная</a>
@@ -65,8 +69,8 @@
   <a href="contact.html">Контакты</a>
     <li><button class="btn-order">Заказать проект</button></li>
   </ul>
-</div>
-<script src="/assets/transition.js"></script>
+</div> -->
+  <script src="/assets/transition.js"></script>
 
   <script>
     document.querySelector('.burger').addEventListener('click', () => {
@@ -74,4 +78,5 @@
     });
   </script>
 </body>
+
 </html>
