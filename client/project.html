@@ -1,52 +1,67 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8" />
   <title>Проект</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/fonts/fonts.css">
-  <!-- <link rel="stylesheet" href="/assets/main.css">
-  <link rel="stylesheet" href="/assets/main-projects.css"> -->
-  <link rel="stylesheet" href="/assets/navbar.css">
-    <link rel="stylesheet" href="/assets/project.css">
+  <!-- <link rel="stylesheet" href="/assets/style/main.css"> -->
+  <link rel="stylesheet" href="/assets/style/main-projects.css">
+  <link rel="stylesheet" href="/assets/style/navbar.css">
+  <link rel="stylesheet" href="/assets/style/project.css">
 
 </head>
-<body >
+
+<body>
   <div id="navbar-container"></div>
-    <script src="/assets/navbar.js"></script>
+  <script src="/assets/navbar.js"></script>
   <div class="project-container">
     <div class="text">
       <div class="NamingArrow">
-          <a id="backBtn" href="projects.html">←</a>
-          <h1 id="title" class="project-title"></h1>
+        <a id="backBtn" href="projects.html">
+          <img src="assets/images/arrow.svg" alt="">
+        </a>
+        <h1 id="title" class="project-title"></h1>
       </div>
-  
-    <div class="text-cont">
-    <p id="description" class="project-description"></p>
-    </div>
+
+      <div class="text-cont">
+        <p id="description" class="project-description"></p>
+      </div>
     </div>
   </div>
 
   <div class="gallery-wrapper">
-        <div class="arrow-container">
-    <button class="arrow-btn arrow-left" onclick="scrollGallery(-1)">←</button>
-    <button class="arrow-btn arrow-right" onclick="scrollGallery(1)">→</button>
+    <div class="arrow-container">
+      <button class="arrow-btn arrow-left" onclick="scrollGallery(-1)">
+        <img src="assets/images/arrow.svg" alt="">
+      </button>
+      <button class="arrow-btn arrow-right" onclick="scrollGallery(1)">
+        <img src="assets/images/arrow_right.svg" alt="">
+      </button>
     </div>
     <div id="gallery"></div>
   </div>
 
   <div id="lightbox">
-    <button class="close-btn" onclick="closeLightbox()">×</button>
-    <button class="nav-btn left" onclick="navigateLightbox(-1)">←</button>
+    <button class="close-btn" onclick="closeLightbox()">
+      <img src="assets/images/x.svg" alt="">
+    </button>
+    <button class="nav-btn left" onclick="navigateLightbox(-1)">
+      <img src="assets/images/arrow.svg" alt="">
+    </button>
     <img id="lightbox-image" src="" alt="Full view">
-    <button class="nav-btn right" onclick="navigateLightbox(1)">→</button>
+    <button class="nav-btn right" onclick="navigateLightbox(1)">
+      <img src="assets/images/arrow_right.svg" alt="">
+    </button>
   </div>
 
   <script src="/assets/carousel.js"></script>
   <script src="/assets/transition.js"></script>
-  <script src="/assets/swipe.js"></script> -->
+  <script src="/assets/swipe.js"></script>
 
-  
+
 </body>
+
 </html>
