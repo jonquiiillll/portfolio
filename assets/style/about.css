@@ -1,47 +1,59 @@
  * {
-      box-sizing: border-box;
-    }
+   box-sizing: border-box;
+ }
 
-    body {
-      font-family: 'Montserrat', sans-serif;
-      margin: 0;
-      background-color: #f7f6f2;
-      color: #222;
-    }
-    .name_photo {
-      margin-top: 50px !important;
-      display: flex;
-      justify-content: space-between;
-      max-width: 1155px;
-      margin: 0 auto;
-      align-items: end;
-      padding-bottom: 30px;
-      align-content: flex-end;
-        border-bottom: 2px #222 solid;
-    }
-    .name {
-        font-size: 30px;
-        font-weight: bold;
-        line-height: 0%;
-    }
-    /* .portrait{
-        width: 30%;
-        height: auto;
-    } */
-    .description {
-      align-content: space-between;
-    }
-    .photo {
-        width: 20%;
-        height: auto;
-    }
-    .description_about {
-      margin-top: 30px !important;
-      display: flex;
-      max-width: 1155px;
-      margin: 0 auto;
-      justify-content: space-between;
-    }
-    .text_about {
-      width: 47%;
-    }
+ body {
+   font-family: 'Montserrat', sans-serif;
+   margin: 0;
+   background-color: #f7f6f2;
+   color: #222;
+ }
+
+ .name_photo {
+  margin-top: 50px !important;
+  display: flex;
+  justify-content: space-between;
+  max-width: 1155px;
+  margin: 0 auto;
+  align-items: stretch;
+  padding-bottom: 30px;
+  border-bottom: 2px #222 solid;
+ }
+
+ .name {
+   font-size: 30px;
+   font-weight: bold;
+   line-height: 0%;
+ }
+
+ .description {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+ }
+
+ .photo {
+  width: 20%;
+  height: auto;
+  max-height: 450px; /* например */
+ }
+
+ .description_about {
+   margin-top: 30px !important;
+   display: flex;
+   max-width: 1155px;
+   margin: 0 auto;
+   justify-content: space-between;
+ }
+
+ .text_about {
+   width: 47%;
+ }
+
+
+/* Адаптив под мобилку */
+ @media (max-width: 768px) {
+  .nav {
+    display: none;
+  }
+}

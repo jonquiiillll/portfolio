@@ -1,3 +1,5 @@
+// 📄 admin.js
+
 document.getElementById('projectForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -84,25 +86,23 @@ async function checkSession() {
 
   const loginForm = document.getElementById('loginForm');
   const projectForm = document.getElementById('projectForm');
-  const userInfo = document.getElementById('userInfo');
+  const logoutContainer = document.getElementById('logoutContainer');
   const projectsTitle = document.getElementById('projectsTitle');
 
   if (data.sessionExists) {
     loginForm.style.display = 'none';
     projectForm.style.display = 'block';
-    userInfo.style.display = 'block';
-    projectsTitle.style.display = 'block'; // показать заголовок
-    document.getElementById('welcome').textContent = `Здравствуйте, ${data.username || 'Ольга'}`;
+    logoutContainer.style.display = 'block';
+    projectsTitle.style.display = 'block';
     loadProjects();
   } else {
     loginForm.style.display = 'block';
     projectForm.style.display = 'none';
-    userInfo.style.display = 'none';
-    projectsTitle.style.display = 'none'; // скрыть заголовок
+    logoutContainer.style.display = 'none';
+    projectsTitle.style.display = 'none';
     document.getElementById('projectsList').innerHTML = '';
   }
 }
-
 
 document.getElementById('loginForm').addEventListener('submit', async e => {
   e.preventDefault();
@@ -119,7 +119,7 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
   const data = await res.json();
 
   if (res.ok && data.ok) {
-    await checkSession(); // ✅ сразу загружаем после входа
+    await checkSession();
   } else {
     alert('Ошибка входа');
   }
@@ -133,5 +133,4 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
   await checkSession();
 });
 
-// 🔥 При загрузке страницы
 window.addEventListener('DOMContentLoaded', checkSession);
