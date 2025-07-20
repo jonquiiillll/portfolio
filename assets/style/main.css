@@ -111,7 +111,8 @@ body {
   border: 20px solid white;
   border-radius: 40px;
   overflow: hidden;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
   width: 100%;
 }
 
@@ -451,6 +452,9 @@ body {
   .burger, .mobile-menu {
     display: flex;
   }
+}
+.mobile-menu a {
+  font-size: 50px;
 }
 .dot {
   width: 8px;
