@@ -51,9 +51,82 @@
  }
 
 
-/* Адаптив под мобилку */
- @media (max-width: 768px) {
-  .nav {
-    display: none;
+@media (max-width: 768px) {
+  .name_photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-left: 23px;
+    margin-right: 23px;
+    /* padding: 0 20px; */
+    padding-bottom: 20px;
+    border-bottom: 2px #222 solid;
+  }
+  .work{
+    text-align: center;
+  }
+  .name {
+    text-align: center;
+  }
+  .number {
+    text-align: center;
+  }
+  .email {
+    text-align: center;
+  }
+  .description {
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .description > div:first-child {
+    order: 2; /* контакты после имени */
+  }
+
+  .description > div:last-child {
+    order: 1; /* имя и должность первыми */
+  }
+
+  .photo {
+    width: auto;
+    max-width: 70%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+  }
+
+  .description_about {
+    margin-top: 30px;
+    display: block;
+    padding: 0 20px;
+  }
+
+  .text_about {
+    width: auto;
+  }
+}
+
+@media (max-width: 400px){
+  .service_title {
+    margin-left: 23px !important;
+    font-size: 10px !important;
+    margin-right: 23px !important;
+  }
+  .name_photo{
+    margin-top: -5px !important;
+  }
+  span{
+    font-size: 20px;
+  }
+    .photo {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 800px;
+    object-fit: cover;
   }
 }
