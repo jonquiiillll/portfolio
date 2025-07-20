@@ -11,6 +11,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script defer src="/assets/scripts/carousel.js"></script>
   <script src="/assets/scripts/preloader.js"></script>
+  <script>
+function setFrameHeight() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+window.addEventListener('resize', setFrameHeight);
+setFrameHeight();
+</script>
+
 </head>
 
 <body>
