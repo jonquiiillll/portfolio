@@ -15,7 +15,7 @@
   .navbar-inner {
     display: flex;
     max-width: 1200px;
-    margin: auto;
+    margin: 0 auto;
     /* margin: 60px auto; */
     padding: 0 20px;
     justify-content: space-between;
@@ -50,7 +50,7 @@
   .burger-button {
     background: none;
     border: none;
-    color: #000;
+    color: #ffffff;
     z-index: 10000;
     display: none;
     font-size: 24px;
@@ -79,7 +79,7 @@
   .burger-icon::after {
     top: 8px;
   }
-  .mobile-menu {
+  /* .mobile-menu {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -90,7 +90,24 @@
     inset: 0;
     z-index: 999;
     font-size: 24px;
-  }
+  } */
+
+    .list_menu {
+display: grid;
+transition: 2s linear ;
+top: 50%;
+    flex-direction: column;
+    align-items: flex-start;
+    align-content: center;
+    gap: 25px;
+    padding: 40px 20px;
+    background: #fff;
+    position: fixed;
+    inset: 0;
+    align-content: center;
+    z-index: 999;
+    font-size: 24px;
+}
   .mobile-menu a {
     text-decoration: none;
     color: #000;
@@ -109,6 +126,11 @@
   .close-mobile {
     background: none;
     border: none;
+
+    top: 35px;
+    position: absolute;
+    z-index: 1000;
+    right:20px;
     font-size: 32px;
     align-self: flex-end;
     cursor: pointer;
