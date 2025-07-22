@@ -34,9 +34,11 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: true,          // ⚠️ true, так как HTTPS
-    sameSite: 'none',      // ⚠️ нужно для HTTPS + кросс-домен
-    maxAge: 1000 * 60 * 60 * 24 // сутки
+    secure: true,
+    sameSite: 'none',
+    path: '/',
+    domain: 'pavlova-interior.ru',
+    maxAge: 1000 * 60 * 60 * 24
   }
 }));
 
