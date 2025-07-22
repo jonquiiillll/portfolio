@@ -154,41 +154,34 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(form);
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Вы не авторизованы.');
-      return;
-    }
+  if (croppedBlob) {
+    formData.append('coverImage', croppedBlob, 'cover.jpg');
+  }
 
-    if (croppedBlob) {
-      formData.append('coverImage', croppedBlob, 'cover.jpg');
-    }
+  for (let file of newGalleryImages) {
+    formData.append('galleryImages', file);
+  }
 
-    for (let file of newGalleryImages) {
-      formData.append('galleryImages', file);
-    }
+  formData.append('existingGallery', JSON.stringify(existingGallery));
 
-    formData.append('existingGallery', JSON.stringify(existingGallery));
-
-    const res = await fetch(`/api/projects/${projectId}`, {
-      method: 'PUT',
-      body: formData,
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (res.ok) {
-      alert('Проект обновлён!');
-      window.location.href = 'admin.html';
-    } else {
-      alert('Ошибка при обновлении проекта');
-    }
+  const res = await fetch(`/api/projects/${projectId}`, {
+    method: 'PUT',
+    body: formData,
+    credentials: 'include'
   });
+
+  if (res.ok) {
+    alert('Проект обновлён!');
+    window.location.href = 'admin.html';
+  } else {
+    alert('Ошибка при обновлении проекта');
+  }
+});
+
 
   loadProject();
 });
