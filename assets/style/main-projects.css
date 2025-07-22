@@ -217,6 +217,7 @@ body.fade-in {
   font-size: clamp(15px, 2vw, 15px);
   font-weight: 600;
   margin: 0;
+  display: none;
   margin-right: 40px;
   min-width: 60px;
   flex-shrink: 0;
@@ -291,8 +292,8 @@ body.fade-in {
   display: flex;
   flex-direction: column;
   gap: 40px;
- border-bottom: none;
-  margin-bottom: 60px;
+
+  border-bottom: none; margin: 0; padding: 0;
 }
     .navbar-container {
       margin-bottom: 20px;

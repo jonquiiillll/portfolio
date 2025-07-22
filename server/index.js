@@ -13,9 +13,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 💡 Доверять proxy, чтобы secure cookie работала за HTTPS
-app.set('trust proxy', 1);
-
 // 💡 CORS — на проде подставь свой домен
 app.use(cors({
   origin: 'https://pavlova-interior.ru', // продакшн домен
