@@ -5,58 +5,52 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const session = require('express-session');
 
-
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+// 💡 Доверять proxy, чтобы secure cookie работала за HTTPS
 app.set('trust proxy', 1);
 
-
-app.use(cors({ origin: 'http://localhost:5000', credentials: true }));
-app.use(express.json());
-
-const PORT = process.env.PORT || 5000;
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'секрет',
-  resave: true,              // Сохранять сессию каждый раз — помогает при нестабильном store
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: false,
-    sameSite: 'lax',
-    maxAge: 1000 * 60 * 60 * 24
-  }
-}));
-
-// Подключение к MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ MongoDB подключена'))
-  .catch(err => console.error('❌ Ошибка подключения к MongoDB:', err));
-
-// Мидлвары
+// 💡 CORS — на проде подставь свой домен
 app.use(cors({
-  origin: 'http://localhost:5000',
+  origin: 'https://pavlova-interior.ru', // продакшн домен
   credentials: true
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Сессии
+// 💡 Сессии
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'секрет',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: true,          // ⚠️ true, так как HTTPS
+    sameSite: 'none',      // ⚠️ нужно для HTTPS + кросс-домен
+    maxAge: 1000 * 60 * 60 * 24 // сутки
+  }
+}));
 
+// 💡 Подключение к MongoDB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('✅ MongoDB подключена'))
+  .catch(err => console.error('❌ Ошибка подключения к MongoDB:', err));
 
-
-// Статика
+// 💡 Статика
 app.use('/uploads/covers', express.static(path.join(__dirname, 'uploads', 'covers')));
 app.use('/uploads/gallery', express.static(path.join(__dirname, 'uploads', 'gallery')));
 app.use('/assets', express.static(path.join(__dirname, '../assets')));
 app.use('/components', express.static(path.join(__dirname, '../client/components')));
 app.use(express.static(path.join(__dirname, '../client')));
 
-// Роуты
+// 💡 Роуты
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 
@@ -64,8 +58,7 @@ app.get('/api/checkSession', (req, res) => {
   res.json({ sessionExists: !!req.session.user });
 });
 
-
-// Фоллбэк для HTML (если не SPA, можно адаптировать)
+// 💡 Фоллбэк для HTML
 app.get('/:fileName', (req, res, next) => {
   const filePath = path.join(__dirname, '../client', req.params.fileName);
   res.sendFile(filePath, err => {
@@ -75,7 +68,6 @@ app.get('/:fileName', (req, res, next) => {
   });
 });
 
-// Запуск
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`✅ Server is running on https://pavlova-interior.ru`);
 });
