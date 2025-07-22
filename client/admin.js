@@ -6,19 +6,11 @@ document.getElementById('projectForm').addEventListener('submit', async (e) => {
   const form = e.target;
   const formData = new FormData(form);
 
-  const token = localStorage.getItem('token');
-  if (!token) {
-    alert('Нет токена. Залогиньтесь сначала.');
-    return;
-  }
-
   try {
     const response = await fetch('/api/projects', {
       method: 'POST',
       body: formData,
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      credentials: 'include'
     });
 
     const data = await response.json();
@@ -83,7 +75,7 @@ async function loadProjects() {
 async function checkSession() {
   const res = await fetch('/api/checkSession', { credentials: 'include' });
   const data = await res.json();
-
+  console.log('checkSession:', data);
   const loginForm = document.getElementById('loginForm');
   const projectForm = document.getElementById('projectForm');
   const logoutContainer = document.getElementById('logoutContainer');
