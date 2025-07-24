@@ -404,6 +404,31 @@ body {
   transition: background 0.3s ease;
 }
 
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.8s ease;
+}
+
+/* #preloader.fade-out {
+  opacity: 0;
+  pointer-events: none;
+} */
+
+#preloader video {
+  width: 200px;
+  height: auto;
+    z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.8s ease;
+}
+
 .controls.bottom-center button:hover {
   background: rgba(255, 255, 255, 0.1);
 }
@@ -418,6 +443,37 @@ body {
   gap: 10px;
   z-index: 20;
 }
+
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 3s ease, visibility 3s ease;
+}
+
+#preloader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#preloader video {
+  width: 200px;
+  height: auto;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+
+#preloader.fade-out video {
+  opacity: 0;
+}
+
 /* === ДЕСКТОП: показываем обычное меню, прячем бургер и моб. меню === */
 @media (min-width: 769px) {
   .nav {

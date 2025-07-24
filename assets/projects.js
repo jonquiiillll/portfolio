@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'project-card';
       card.innerHTML = `
         <img src="${project.coverImage}" alt="${project.title}" />
-        <div class="project-name">${project.title} <span class="arrow">↗</span></div>
+        <div class="project-name">${project.title}
       `;
       grid.appendChild(card);
     });

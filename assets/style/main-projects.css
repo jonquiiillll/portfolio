@@ -248,7 +248,7 @@ body.fade-in {
 }
 
 .project-name {
-  margin-top: 8px;
+  margin-top: 0px;
   font-size: 14px;
 }
 
@@ -274,7 +274,8 @@ body.fade-in {
 
 @media (max-width: 768px) {
   .project-card {
-    width: calc(40% - 10px);
+    width: calc(50% - 10px);
+    margin-bottom: 20px;
   }
   .year-title {
     /* margin-bottom: 20px; */
