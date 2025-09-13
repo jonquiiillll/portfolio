@@ -1,40 +1,74 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.getElementById('project-years-container');
+// 📄 projects.js
 
-  async function loadProjects(category = 'все') {
-    container.classList.add('fade-out');
-    container.offsetHeight;
-    await new Promise(resolve => setTimeout(resolve, 400));
-    container.innerHTML = '';
+async function loadProjects(category = 'все') {
+  try {
+    const url = category && category !== 'все'
+      ? `/api/projects?category=${encodeURIComponent(category)}`
+      : '/api/projects';
 
-    const res = await fetch(`/api/projects?category=${encodeURIComponent(category)}`);
+    const res = await fetch(url);
     const projects = await res.json();
 
-    const grid = document.createElement('div');
-    grid.className = 'project-grid fade-in';
+    const container = document.getElementById('project-years-container');
+    container.innerHTML = '';
 
-    projects.forEach(project => {
-      const card = document.createElement('a');
-      card.href = `project.html?id=${project._id}`;
-      card.className = 'project-card';
-      card.innerHTML = `
-        <img src="${project.coverImage}" alt="${project.title}" />
-        <div class="project-name">${project.title}
-      `;
-      grid.appendChild(card);
+    // Группируем по годам
+    const grouped = {};
+    projects.forEach(p => {
+      if (!grouped[p.year]) grouped[p.year] = [];
+      grouped[p.year].push(p);
     });
 
-    container.appendChild(grid);
-    container.classList.remove('fade-out');
+    // Сортируем года по убыванию
+    const years = Object.keys(grouped).sort((a, b) => b - a);
+
+    years.forEach(year => {
+      const section = document.createElement('div');
+      section.className = 'projects-year-section';
+
+      const header = document.createElement('h2');
+      header.className = 'year-title';
+      header.textContent = year;
+      section.appendChild(header);
+
+
+      const grid = document.createElement('div');
+      grid.className = 'projects-grid';
+
+      grouped[year].forEach(project => {
+        const card = document.createElement('div');
+        card.className = 'project-card';
+        card.innerHTML = `
+          <img src="${project.coverImage}" alt="${project.title}" />
+          <div class="project-card-title">${project.title}</div>
+        `;
+        card.addEventListener('click', () => {
+          window.location.href = `project.html?id=${project.id}`;
+        });
+        grid.appendChild(card);
+      });
+
+      section.appendChild(grid);
+      container.appendChild(section);
+    });
+  } catch (err) {
+    console.error('Ошибка загрузки проектов:', err);
   }
+}
 
-  document.querySelector('.category-filters').addEventListener('click', (e) => {
-    if (e.target.tagName === 'BUTTON') {
-      document.querySelectorAll('.category-filters button').forEach(btn => btn.classList.remove('active'));
-      e.target.classList.add('active');
-      loadProjects(e.target.dataset.category);
-    }
+function setupFilters() {
+  const buttons = document.querySelectorAll('.category-filters button');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const category = btn.dataset.category;
+      loadProjects(category);
+    });
   });
+}
 
+window.addEventListener('DOMContentLoaded', () => {
+  setupFilters();
   loadProjects();
 });

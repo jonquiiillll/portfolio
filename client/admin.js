@@ -1,5 +1,6 @@
 // 📄 admin.js
 
+// Добавление нового проекта
 document.getElementById('projectForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -20,7 +21,7 @@ document.getElementById('projectForm').addEventListener('submit', async (e) => {
       form.reset();
       loadProjects();
     } else {
-      alert('Ошибка: ' + data.error);
+      alert('Ошибка: ' + (data.error || 'Не удалось добавить проект'));
     }
   } catch (error) {
     console.error('Ошибка запроса:', error);
@@ -28,6 +29,7 @@ document.getElementById('projectForm').addEventListener('submit', async (e) => {
   }
 });
 
+// Загрузка списка проектов
 async function loadProjects() {
   try {
     const res = await fetch('/api/projects');
@@ -41,30 +43,54 @@ async function loadProjects() {
 
       div.innerHTML = `
         <div class="left_part">
-        <img src="${project.coverImage}" alt="${project.title}" />
-        <div class="text_project">
-          <strong>${project.title}</strong><br>
-          <small>${project.year || ''} — ${project.category || ''}</small>
-        </div>
+          <img src="${project.coverImage}" alt="${project.title}" />
+          <div class="text_project">
+            <strong>${project.title}</strong><br>
+            <small>${project.year || ''} — ${project.category || ''}</small>
+          </div>
         </div>
         <div class="right_part">
-          <a href="edit-project.html?id=${project._id}">✏️ Редактировать</a>
-          <button data-id="${project._id}" class="delete-btn">🗑 Удалить</button>
+          <button data-id="${project.id}" class="edit-btn">✏️ Редактировать</button>
+          <button data-id="${project.id}" class="delete-btn">🗑 Удалить</button>
         </div>
       `;
       list.appendChild(div);
     });
 
+    // Удаление проекта
     document.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const id = btn.dataset.id;
         if (confirm('Удалить проект?')) {
-          await fetch(`/api/projects/${id}`, {
+          const res = await fetch(`/api/projects/${id}`, {
             method: 'DELETE',
             credentials: 'include',
           });
-          loadProjects();
+          if (res.ok) {
+            loadProjects();
+          } else {
+            alert('Ошибка при удалении проекта');
+          }
         }
+      });
+    });
+
+    // Редактирование проекта
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        const res = await fetch(`/api/projects/${id}`);
+        if (!res.ok) return alert('Ошибка загрузки проекта');
+        const project = await res.json();
+
+        // Заполняем форму модалки
+        document.getElementById('edit-id').value = project.id;
+        document.getElementById('edit-title').value = project.title || '';
+        document.getElementById('edit-description').value = project.description || '';
+        document.getElementById('edit-category').value = project.category || '';
+        document.getElementById('edit-year').value = project.year || '';
+
+        document.getElementById('editModal').style.display = 'block';
       });
     });
   } catch (err) {
@@ -72,6 +98,37 @@ async function loadProjects() {
   }
 }
 
+// Закрытие модального окна
+document.getElementById('closeEditModal').addEventListener('click', () => {
+  document.getElementById('editModal').style.display = 'none';
+});
+
+// Сохранение изменений в проекте
+document.getElementById('editForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('edit-id').value;
+  const form = e.target;
+  const formData = new FormData(form);
+
+  try {
+    const res = await fetch(`/api/projects/${id}`, {
+      method: 'PUT',
+      body: formData,
+      credentials: 'include'
+    });
+    if (res.ok) {
+      alert('Проект обновлен');
+      document.getElementById('editModal').style.display = 'none';
+      loadProjects();
+    } else {
+      alert('Ошибка при обновлении проекта');
+    }
+  } catch (err) {
+    console.error('Ошибка редактирования:', err);
+  }
+});
+
+// Проверка сессии
 async function checkSession() {
   const res = await fetch('/api/checkSession', { credentials: 'include' });
   const data = await res.json();
@@ -96,6 +153,7 @@ async function checkSession() {
   }
 }
 
+// Логин
 document.getElementById('loginForm').addEventListener('submit', async e => {
   e.preventDefault();
   const username = document.getElementById('username').value;
@@ -117,6 +175,7 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
   }
 });
 
+// Логаут
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   await fetch('/api/auth/logout', {
     method: 'POST',

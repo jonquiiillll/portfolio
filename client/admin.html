@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Админка</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/fonts/fonts.css">
   <link rel="stylesheet" href="/assets/style/admin.css">
   <link rel="stylesheet" href="/assets/style/main.css">
   <link rel="stylesheet" href="/assets/style/navbar.css">
-  <title>Админка</title>
 </head>
 <body>
   <div id="navbar-container"></div>
-    <script src="/assets/navbar.js"></script>
+  <script src="/assets/navbar.js"></script>
+
   <h1 class="title_page">Админ-панель</h1>
 
   <!-- Форма логина -->
@@ -57,6 +59,42 @@
   <h2 id="projectsTitle" style="display: none;">Список проектов</h2>
   <div id="projectsList" class="admin-projects-container"></div>
 
-  <script src="admin.js"></script>
+  <!-- Модальное окно редактирования -->
+  <div id="editModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span id="closeEditModal" class="close">&times;</span>
+      <h2>Редактировать проект</h2>
+      <form id="editForm" enctype="multipart/form-data">
+        <input type="hidden" name="id" id="edit-id">
+
+        <label>Название:</label>
+        <input type="text" name="title" id="edit-title" required>
+
+        <label>Описание:</label>
+        <input type="text" name="description" id="edit-description">
+
+        <label>Категория:</label>
+        <select name="category" id="edit-category" required>
+          <option value="жилые">Жилые</option>
+          <option value="общественные">Общественные</option>
+          <option value="коттеджи">Коттеджи</option>
+        </select>
+
+        <label>Год:</label>
+        <input type="number" name="year" id="edit-year" min="1900" max="2099" required>
+
+        <label>Новая обложка (если нужно заменить):</label>
+        <input type="file" name="coverImage" accept="image/*">
+
+        <label>Добавить изображения в галерею:</label>
+        <input type="file" name="galleryImages" accept="image/*" multiple>
+
+        <button type="submit">Сохранить изменения</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Скрипт админки -->
+  <script src="/admin.js"></script>
 </body>
 </html>

@@ -1,21 +1,26 @@
+// server/index.js
+'use strict';
+
 const express = require('express');
-const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const session = require('express-session');
 
 const authRoutes = require('./routes/auth');
-const projectRoutes = require('./routes/projects');
+
+  // логин/логаут
+const projectRoutes = require('./routes/projects'); // CRUD проектов
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const PROD = process.env.NODE_ENV === 'production';
 
-// 💡 CORS — на проде подставь свой домен
+// 💡 CORS — на проде подставляем домен, локально localhost:3000
 app.use(cors({
-  origin: 'https://pavlova-interior.ru', // продакшн домен
+  origin: PROD ? (process.env.CORS_ORIGIN || 'https://pavlova-interior.ru') : 'http://localhost:3000',
   credentials: true
 }));
 
@@ -23,7 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 💡 Сессии
-app.set('trust proxy', 1);
+if (PROD) app.set('trust proxy', 1);
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'секрет',
@@ -31,18 +36,13 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: true,
-    sameSite: 'none',
+    secure: PROD,         // только по https на проде
+    sameSite: PROD ? 'none' : 'lax',
     path: '/',
-    domain: 'pavlova-interior.ru',
-    maxAge: 1000 * 60 * 60 * 24
+    domain: PROD ? 'pavlova-interior.ru' : undefined,
+    maxAge: 1000 * 60 * 60 * 24 // сутки
   }
 }));
-
-// 💡 Подключение к MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ MongoDB подключена'))
-  .catch(err => console.error('❌ Ошибка подключения к MongoDB:', err));
 
 // 💡 Статика
 app.use('/uploads/covers', express.static(path.join(__dirname, 'uploads', 'covers')));
@@ -59,16 +59,14 @@ app.get('/api/checkSession', (req, res) => {
   res.json({ sessionExists: !!req.session.user });
 });
 
-// 💡 Фоллбэк для HTML
+// 💡 Фоллбэк для SPA
 app.get('/:fileName', (req, res, next) => {
   const filePath = path.join(__dirname, '../client', req.params.fileName);
   res.sendFile(filePath, err => {
-    if (err) {
-      next();
-    }
+    if (err) next();
   });
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Server is running on https://pavlova-interior.ru`);
+  console.log(`✅ Server is running on port ${PORT}`);
 });

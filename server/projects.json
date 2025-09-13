@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": "965ae3da-1198-47e7-bd90-450b11191f24",
+    "title": "Тестировавыаывние проекта22",
+    "description": "описание",
+    "category": "коттеджи",
+    "year": 2025,
+    "coverImage": "/uploads/covers/coverImage-1757767977617-429777179.jpg",
+    "galleryImages": [],
+    "createdAt": "2025-09-13T12:52:57.620Z",
+    "updatedAt": "2025-09-13T13:09:46.510Z"
+  }
+]

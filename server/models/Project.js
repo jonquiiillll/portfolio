@@ -1,19 +1,8 @@
-const mongoose = require('mongoose');
+// server/models/Project.js
+'use strict';
 
-const projectSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  coverImage: String,
-  galleryImages: [String],
-  category: {
-    type: String,
-    enum: ['жилые', 'общественные', 'коттеджи'],
-    required: true
-  },
-  year: {
-    type: Number,
-    required: true
-  }
-});
+// 🔒 Модель через MongoDB больше не используется.
+// Этот файл оставлен только как заглушка, чтобы не упал require.
+// Весь функционал перенесён в server/services/projectStore.js.
 
-module.exports = mongoose.model('Project', projectSchema);
+module.exports = {};
