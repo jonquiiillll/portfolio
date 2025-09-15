@@ -7,13 +7,14 @@
     "year": 2023,
     "coverImage": "/uploads/covers/coverImage-1757944726876-338078597.png",
     "galleryImages": [
-      "/uploads/gallery/galleryImages-1757944707305-979161915.png",
       "/uploads/gallery/galleryImages-1757944707312-491842489.png",
-      "/uploads/gallery/galleryImages-1757944726880-834234476.png",
+      "/uploads/gallery/galleryImages-1757944707305-979161915.png",
       "/uploads/gallery/galleryImages-1757947753396-381167040.png",
+      "/uploads/gallery/galleryImages-1757944726880-834234476.png",
       "/uploads/gallery/galleryImages-1757947753415-316993939.png"
     ],
     "createdAt": "2025-09-15T13:58:27.319Z",
-    "updatedAt": "2025-09-15T14:49:13.422Z"
+    "updatedAt": "2025-09-15T16:10:24.439Z",
+    "tags": []
   }
 ]

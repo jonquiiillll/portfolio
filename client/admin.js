@@ -40,6 +40,57 @@ document.getElementById('createForm').addEventListener('submit', async (e) => {
 
 // ====================== Галерея ======================
 let currentGallery = [];
+// ====================== Галерея превью ======================
+function renderGalleryThumbs() {
+  const container = document.getElementById('galleryThumbs');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const hidden = document.getElementById('existingGallery');
+  if (hidden) hidden.value = JSON.stringify(currentGallery);
+
+  currentGallery.forEach((src, index) => {
+    const item = document.createElement('div');
+    item.className = 'gallery-thumb';
+    item.draggable = true;
+    item.dataset.index = String(index);
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = `img-${index}`;
+    item.appendChild(img);
+
+    item.addEventListener('dragstart', (ev) => {
+      item.classList.add('dragging');
+      ev.dataTransfer.setData('text/plain', String(index));
+      ev.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      document.querySelectorAll('.gallery-thumb.over').forEach(el => el.classList.remove('over'));
+    });
+    item.addEventListener('dragover', (ev) => {
+      ev.preventDefault();
+      item.classList.add('over');
+      ev.dataTransfer.dropEffect = 'move';
+    });
+    item.addEventListener('dragleave', () => item.classList.remove('over'));
+    item.addEventListener('drop', (ev) => {
+      ev.preventDefault();
+      item.classList.remove('over');
+      const from = parseInt(ev.dataTransfer.getData('text/plain'));
+      const to = parseInt(item.dataset.index || '0');
+      if (isNaN(from) || isNaN(to) || from === to) return;
+      const moved = currentGallery.splice(from, 1)[0];
+      currentGallery.splice(to, 0, moved);
+      renderGalleryThumbs();
+    });
+
+    container.appendChild(item);
+  });
+
+  if (hidden) hidden.value = JSON.stringify(currentGallery);
+}
 
 // ... (оставил renderGalleryThumbs как был у тебя, он рабочий)
 
@@ -266,4 +317,15 @@ document.getElementById('editCropBtn')?.addEventListener('click', () => {
   const f = document.getElementById('editCoverInput')?.files?.[0];
   if (!f) return alert('Нет изображения для обрезки');
   openCropper(f, 'edit');
+});
+
+
+// Открытие/закрытие модалки создания проекта
+document.getElementById('openCreateModal')?.addEventListener('click', () => {
+  document.getElementById('createModal').style.display = 'flex';
+  document.body.classList.add('modal-open');
+});
+document.getElementById('closeCreateModal')?.addEventListener('click', () => {
+  document.getElementById('createModal').style.display = 'none';
+  document.body.classList.remove('modal-open');
 });
