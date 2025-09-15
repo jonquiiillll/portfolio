@@ -1,31 +1,29 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const preloader = document.getElementById('preloader');
-  const video = document.getElementById('preloaderVideo');
-  const lastShown = localStorage.getItem('preloaderLastShown');
+document.addEventListener("DOMContentLoaded", () => {
+  const preloader = document.getElementById("preloader");
+  const video = document.getElementById("preloaderVideo");
+
+  const lastShown = localStorage.getItem("preloaderLastShown");
   const now = Date.now();
-  const ONE_HOUR = 1000;
+  const ONE_HOUR = 60 * 60 * 1000; // 1 час
 
-  const fadeOut = () => {
-    preloader.classList.add('fade-out');
-    localStorage.setItem('preloaderLastShown', now.toString());
-
-    // После окончания анимации полностью убираем DOM
-    setTimeout(() => {
-      preloader.remove();
-    }, 1600); // немного больше, чем transition в CSS
-  };
-
-  if (!lastShown || now - parseInt(lastShown, 10) > ONE_HOUR) {
-    window.addEventListener('load', () => {
-      if (video) {
-        video.onended = () => {
-          setTimeout(fadeOut, 300);
-        };
-      } else {
-        setTimeout(fadeOut, 3000);
-      }
-    });
-  } else {
-    preloader.style.display = 'none';
+  // если прелоадер показывался меньше часа назад — скрываем его сразу
+  if (lastShown && now - parseInt(lastShown, 10) < ONE_HOUR) {
+    preloader.remove();
+    return;
   }
+
+  // иначе показываем и записываем время
+  localStorage.setItem("preloaderLastShown", now.toString());
+
+  video.addEventListener("timeupdate", () => {
+    // ловим момент перед концом
+    if (video.duration - video.currentTime < 0.2) {
+      video.pause();
+      video.currentTime = video.duration - 0.2; // замораживаем кадр
+
+      preloader.classList.add("fade-out");
+
+      setTimeout(() => preloader.remove(), 2100);
+    }
+  });
 });

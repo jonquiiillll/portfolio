@@ -55,5 +55,20 @@
     "tags": [],
     "createdAt": "2025-09-15T19:39:27.727Z",
     "updatedAt": "2025-09-15T19:39:40.413Z"
+  },
+  {
+    "id": "e3e8a862-62c4-4bf9-9d5d-23178332090f",
+    "title": "проект",
+    "description": "",
+    "category": "коттеджи",
+    "year": 2024,
+    "coverImage": "/uploads/covers/coverImage-1757965762963-371438951.jpg",
+    "galleryImages": [
+      "/uploads/gallery/galleryImages-1757965762966-545984965.jpg",
+      "/uploads/gallery/galleryImages-1757965762967-606107868.jpg"
+    ],
+    "tags": [],
+    "createdAt": "2025-09-15T19:49:22.975Z",
+    "updatedAt": "2025-09-15T19:49:22.975Z"
   }
 ]

@@ -227,24 +227,45 @@ body.fade-in {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: flex-end; /* 👈 прижимаем карточки вправо */
-  flex: 1;
+  justify-content: flex-end; /* карточки прижаты вправо */
 }
 
 .project-card {
-  width: 20%; /* можешь увеличить если нужно */
-  text-decoration: none;
+  flex: 0 0 calc(50% - 20px); /* 👈 две в ряд */
   border-radius: 10px;
+  text-decoration: none;
   color: inherit;
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
 }
 
 .project-card img {
   width: 100%;
-  height: auto;
+  aspect-ratio: 3 / 4;   /* фикс пропорции */
+  object-fit: cover;     /* подрезаем, чтобы вписать */
+  border-radius: 6px;
   display: block;
+  background-color: #eee;
+}
+@media (max-width: 900px) {
+  .project-card {
+    flex: 0 0 calc(50% - 20px); /* 2 в ряд */
+  }
+}
+
+@media (max-width: 600px) {
+  .project-card {
+    flex: 0 0 100%; /* по одной */
+  }
+}
+
+.project-card img {
+  width: 100%;
+  aspect-ratio: 3 / 4;   /* фикс пропорции */
+  object-fit: cover;     /* обрезка по контейнеру */
+  border-radius: 6px;
+  display: block;
+  background-color: #eee;
 }
 
 .project-name {
