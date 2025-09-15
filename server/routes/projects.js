@@ -62,16 +62,20 @@ router.get('/:id', async (req, res) => {
 // POST /api/projects
 router.post('/', auth, upload.any(), async (req, res) => {
   try {
-    const { title, description = '', category, year } = req.body;
+    const { title, description = '', category, year, tags } = req.body;
 
     const cover = req.files.find(f => f.fieldname === 'coverImage');
     const gallery = req.files.filter(f => f.fieldname === 'galleryImages');
+
+    let parsedTags = [];
+    try { if (typeof tags === 'string') parsedTags = JSON.parse(tags); else if (Array.isArray(tags)) parsedTags = tags; } catch {}
 
     const newProject = await store.create({
       title,
       description,
       category,
       year,
+      tags: Array.isArray(parsedTags) ? parsedTags : [],
       coverImage: cover ? `/uploads/covers/${cover.filename}` : null,
       galleryImages: gallery.map(f => `/uploads/gallery/${f.filename}`)
     });
@@ -86,7 +90,7 @@ router.post('/', auth, upload.any(), async (req, res) => {
 // PUT /api/projects/:id
 router.put('/:id', auth, upload.any(), async (req, res) => {
   try {
-    const { title, description = '', category, year, existingGallery } = req.body;
+    const { title, description = '', category, year, existingGallery, tags } = req.body;
 
     const cover = req.files.find(f => f.fieldname === 'coverImage');
     const gallery = req.files.filter(f => f.fieldname === 'galleryImages');
@@ -94,11 +98,15 @@ router.put('/:id', auth, upload.any(), async (req, res) => {
     const existing = existingGallery ? JSON.parse(existingGallery) : [];
     const newGallery = gallery.map(f => `/uploads/gallery/${f.filename}`);
 
+    let parsedTags = [];
+    try { if (typeof tags === 'string') parsedTags = JSON.parse(tags); else if (Array.isArray(tags)) parsedTags = tags; } catch {}
+
     const updated = await store.update(req.params.id, {
       title,
       description,
       category,
       year,
+      tags: Array.isArray(parsedTags) ? parsedTags : undefined,
       coverImage: cover ? `/uploads/covers/${cover.filename}` : undefined,
       galleryImages: [...existing, ...newGallery]
     });

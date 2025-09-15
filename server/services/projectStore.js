@@ -57,7 +57,7 @@ module.exports = {
     return all.find(p => p.id === id) || null;
   },
 
-  async create({ title, description = '', category, year, coverImage, galleryImages }) {
+  async create({ title, description = '', category, year, coverImage, galleryImages, tags }) {
     const all = await readAll();
     const now = new Date().toISOString();
 
@@ -71,6 +71,7 @@ module.exports = {
       galleryImages: Array.isArray(galleryImages)
         ? galleryImages.map(normalizeRel).filter(Boolean)
         : [],
+      tags: Array.isArray(tags) ? tags.slice(0, 50) : [],
       createdAt: now,
       updatedAt: now
     };
@@ -100,6 +101,9 @@ module.exports = {
             ? patch.galleryImages.map(normalizeRel).filter(Boolean)
             : prev.galleryImages)
         : prev.galleryImages,
+      tags: patch.tags !== undefined
+        ? (Array.isArray(patch.tags) ? patch.tags.slice(0,50) : prev.tags)
+        : prev.tags,
       updatedAt: new Date().toISOString()
     };
 

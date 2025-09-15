@@ -41,6 +41,12 @@ h1, h2 {
 #projectsTitle {
     margin-top: 50px;
 }
+.create-bar {
+  max-width: 995px;
+  margin: 20px auto 0;
+  display: flex;
+  justify-content: flex-end;
+}
 .left_part {
     display: flex;
     align-content: center;
@@ -124,4 +130,196 @@ button:hover {
   font-style: italic;
   color: #777;
   margin-top: 40px;
+}
+
+/* Modal overlay for edit form */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal .modal-content {
+  position: relative;
+  width: min(900px, 92vw);
+  max-height: 90vh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  padding: 24px;
+}
+
+.modal .close {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Thumbnails grid for gallery */
+.gallery-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+  margin: 8px 0 12px;
+}
+
+.gallery-thumb {
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  background: #fafafa;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+}
+
+.gallery-thumb img {
+  width: 100%;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.gallery-thumb.dragging {
+  opacity: 0.6;
+}
+
+.gallery-thumb.over {
+  outline: 2px dashed #888;
+}
+
+/* Buttons */
+.btn-primary {
+  background: #111;
+  color: #fff;
+  border: 1px solid #111;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.btn-secondary {
+  background: #fff;
+  color: #111;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.modal .modal-content .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Card layout for create form */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+.form-field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.form-field.span-2 { grid-column: 1 / -1; }
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Tags input */
+.tags-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+}
+.tags-input input {
+  border: none;
+  outline: none;
+  min-width: 120px;
+  padding: 6px 4px;
+}
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef1ff;
+  color: #4155d0;
+  font-weight: 600;
+  font-size: 13px;
+}
+.tag-chip .remove {
+  cursor: pointer;
+  color: #7d89ff;
+}
+
+/* Dropzone */
+.dropzone {
+  border: 2px dashed #d8d8d8;
+  border-radius: 12px;
+  background: #fbfbfb;
+  padding: 18px;
+  text-align: center;
+}
+.dropzone.dragover {
+  background: #f0f5ff;
+  border-color: #a7b8ff;
+}
+.dz-title { font-weight: 600; margin-bottom: 6px; }
+.dz-sub { color: #777; margin-bottom: 10px; font-size: 13px; }
+
+/* Category select (dropdown + chip) */
+.category-select { position: relative; }
+.category-select .cat-button {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff;
+  cursor: pointer; font-weight: 600;
+}
+.category-select .arrow { margin-left: 8px; opacity: .6; }
+.category-select .dropdown {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 2;
+  background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  display: none; max-height: 220px; overflow: auto;
+}
+.category-select.open .dropdown { display: block; }
+.category-select .option { padding: 10px 12px; cursor: pointer; }
+.category-select .option:hover { background: #f5f7ff; }
+.category-chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; background: #eef1ff; color: #4155d0; font-weight: 600; font-size: 13px; }
+
+@media (max-width: 768px) {
+  .gallery-thumbs {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+  .form-grid { grid-template-columns: 1fr; }
 }

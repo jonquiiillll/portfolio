@@ -1,11 +1,18 @@
-// 📄 admin.js
+﻿// admin.js
 
-// Добавление нового проекта
-document.getElementById('projectForm').addEventListener('submit', async (e) => {
+// ====================== Создание проекта ======================
+document.getElementById('createForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const form = e.target;
+  const hidden = document.getElementById('existingGallery');
+  if (hidden) hidden.value = JSON.stringify(currentGallery);
   const formData = new FormData(form);
+
+  // если обложка была обрезана кроппером
+  if (createCoverBlob) {
+    formData.set('coverImage', createCoverBlob, 'cover.jpg');
+  }
 
   try {
     const response = await fetch('/api/projects', {
@@ -19,7 +26,9 @@ document.getElementById('projectForm').addEventListener('submit', async (e) => {
     if (response.ok) {
       alert('Проект успешно добавлен!');
       form.reset();
+      createCoverBlob = null;
       loadProjects();
+      document.getElementById('createModal').style.display = 'none';
     } else {
       alert('Ошибка: ' + (data.error || 'Не удалось добавить проект'));
     }
@@ -29,7 +38,12 @@ document.getElementById('projectForm').addEventListener('submit', async (e) => {
   }
 });
 
-// Загрузка списка проектов
+// ====================== Галерея ======================
+let currentGallery = [];
+
+// ... (оставил renderGalleryThumbs как был у тебя, он рабочий)
+
+// ====================== Загрузка проектов ======================
 async function loadProjects() {
   try {
     const res = await fetch('/api/projects');
@@ -57,7 +71,7 @@ async function loadProjects() {
       list.appendChild(div);
     });
 
-    // Удаление проекта
+    // Удаление
     document.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const id = btn.dataset.id;
@@ -66,16 +80,13 @@ async function loadProjects() {
             method: 'DELETE',
             credentials: 'include',
           });
-          if (res.ok) {
-            loadProjects();
-          } else {
-            alert('Ошибка при удалении проекта');
-          }
+          if (res.ok) loadProjects();
+          else alert('Ошибка при удалении проекта');
         }
       });
     });
 
-    // Редактирование проекта
+    // Редактирование
     document.querySelectorAll('.edit-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const id = btn.dataset.id;
@@ -83,14 +94,19 @@ async function loadProjects() {
         if (!res.ok) return alert('Ошибка загрузки проекта');
         const project = await res.json();
 
-        // Заполняем форму модалки
         document.getElementById('edit-id').value = project.id;
         document.getElementById('edit-title').value = project.title || '';
         document.getElementById('edit-description').value = project.description || '';
-        document.getElementById('edit-category').value = project.category || '';
         document.getElementById('edit-year').value = project.year || '';
 
-        document.getElementById('editModal').style.display = 'block';
+        // категория
+        document.getElementById('edit-category-hidden').value = project.category || '';
+
+        currentGallery = Array.isArray(project.galleryImages) ? [...project.galleryImages] : [];
+        renderGalleryThumbs();
+
+        document.getElementById('editModal').style.display = 'flex';
+        document.body.classList.add('modal-open');
       });
     });
   } catch (err) {
@@ -98,17 +114,16 @@ async function loadProjects() {
   }
 }
 
-// Закрытие модального окна
-document.getElementById('closeEditModal').addEventListener('click', () => {
-  document.getElementById('editModal').style.display = 'none';
-});
-
-// Сохранение изменений в проекте
+// ====================== Редактирование проекта ======================
 document.getElementById('editForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const id = document.getElementById('edit-id').value;
   const form = e.target;
   const formData = new FormData(form);
+
+  if (editCoverBlob) {
+    formData.set('coverImage', editCoverBlob, 'cover.jpg');
+  }
 
   try {
     const res = await fetch(`/api/projects/${id}`, {
@@ -117,8 +132,9 @@ document.getElementById('editForm').addEventListener('submit', async (e) => {
       credentials: 'include'
     });
     if (res.ok) {
-      alert('Проект обновлен');
-      document.getElementById('editModal').style.display = 'none';
+      alert('Проект обновлён');
+      closeEditModal();
+      editCoverBlob = null;
       loadProjects();
     } else {
       alert('Ошибка при обновлении проекта');
@@ -128,25 +144,42 @@ document.getElementById('editForm').addEventListener('submit', async (e) => {
   }
 });
 
-// Проверка сессии
+// ====================== Модалки ======================
+function closeEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+  document.body.classList.remove('modal-open');
+  currentGallery = [];
+}
+
+document.getElementById('closeEditModal').addEventListener('click', closeEditModal);
+document.getElementById('editModal').addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'editModal') closeEditModal();
+});
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.getElementById('editModal').style.display !== 'none') {
+    closeEditModal();
+  }
+});
+
+// ====================== Сессия ======================
 async function checkSession() {
   const res = await fetch('/api/checkSession', { credentials: 'include' });
   const data = await res.json();
-  console.log('checkSession:', data);
+
   const loginForm = document.getElementById('loginForm');
-  const projectForm = document.getElementById('projectForm');
+  const createBar = document.getElementById('createBar');
   const logoutContainer = document.getElementById('logoutContainer');
   const projectsTitle = document.getElementById('projectsTitle');
 
   if (data.sessionExists) {
     loginForm.style.display = 'none';
-    projectForm.style.display = 'block';
+    createBar.style.display = 'block';
     logoutContainer.style.display = 'block';
     projectsTitle.style.display = 'block';
     loadProjects();
   } else {
     loginForm.style.display = 'block';
-    projectForm.style.display = 'none';
+    createBar.style.display = 'none';
     logoutContainer.style.display = 'none';
     projectsTitle.style.display = 'none';
     document.getElementById('projectsList').innerHTML = '';
@@ -167,12 +200,8 @@ document.getElementById('loginForm').addEventListener('submit', async e => {
   });
 
   const data = await res.json();
-
-  if (res.ok && data.ok) {
-    await checkSession();
-  } else {
-    alert('Ошибка входа');
-  }
+  if (res.ok && data.ok) await checkSession();
+  else alert('Ошибка входа');
 });
 
 // Логаут
@@ -185,3 +214,56 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 });
 
 window.addEventListener('DOMContentLoaded', checkSession);
+
+// ====================== Кроппер ======================
+const cropModal = document.getElementById('cropModal');
+const cropImg = document.getElementById('cropImage');
+const cropSave = document.getElementById('cropSave');
+const cropCancel = document.getElementById('cropCancel');
+const closeCropModal = document.getElementById('closeCropModal');
+
+let cropper = null;
+let cropContext = null;
+let createCoverBlob = null;
+let editCoverBlob = null;
+
+function openCropper(file, context) {
+  cropContext = context;
+  const url = URL.createObjectURL(file);
+  cropImg.src = url;
+  if (cropper) cropper.destroy();
+  cropper = new window.Cropper(cropImg, { aspectRatio: 3 / 4, viewMode: 1, autoCropArea: 1 });
+  cropModal.style.display = 'flex';
+  document.body.classList.add('modal-open');
+}
+
+function closeCrop() {
+  cropModal.style.display = 'none';
+  document.body.classList.remove('modal-open');
+  if (cropper) { cropper.destroy(); cropper = null; }
+  cropImg.src = '';
+}
+
+cropCancel?.addEventListener('click', closeCrop);
+closeCropModal?.addEventListener('click', closeCrop);
+cropSave?.addEventListener('click', () => {
+  if (!cropper) return closeCrop();
+  cropper.getCroppedCanvas().toBlob((blob) => {
+    if (!blob) return closeCrop();
+    if (cropContext === 'create') createCoverBlob = blob;
+    else editCoverBlob = blob;
+    closeCrop();
+  }, 'image/jpeg', 0.92);
+});
+
+// Кнопки кропера
+document.getElementById('createCropBtn')?.addEventListener('click', () => {
+  const f = document.getElementById('createCoverInput')?.files?.[0];
+  if (!f) return alert('Сначала выберите обложку');
+  openCropper(f, 'create');
+});
+document.getElementById('editCropBtn')?.addEventListener('click', () => {
+  const f = document.getElementById('editCoverInput')?.files?.[0];
+  if (!f) return alert('Нет изображения для обрезки');
+  openCropper(f, 'edit');
+});

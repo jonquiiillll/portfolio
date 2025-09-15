@@ -1,0 +1,35 @@
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1.5s ease, visibility 1.5s ease;
+}
+
+#preloader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#preloader video {
+  width: 200px;
+  height: auto;
+  opacity: 1;
+  transition: opacity 1.5s ease;
+}
+
+#preloader.fade-out video {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  #preloader video {
+    max-width: 300px;
+  }
+}

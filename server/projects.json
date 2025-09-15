@@ -1,13 +1,19 @@
 [
   {
-    "id": "965ae3da-1198-47e7-bd90-450b11191f24",
-    "title": "Тестировавыаывние проекта22",
-    "description": "описание",
-    "category": "коттеджи",
-    "year": 2025,
-    "coverImage": "/uploads/covers/coverImage-1757767977617-429777179.jpg",
-    "galleryImages": [],
-    "createdAt": "2025-09-13T12:52:57.620Z",
-    "updatedAt": "2025-09-13T13:09:46.510Z"
+    "id": "1d0b8adf-202b-4504-ae7b-97da53993655",
+    "title": "Тестирование",
+    "description": "тестирование",
+    "category": "жилые",
+    "year": 2023,
+    "coverImage": "/uploads/covers/coverImage-1757944726876-338078597.png",
+    "galleryImages": [
+      "/uploads/gallery/galleryImages-1757944707305-979161915.png",
+      "/uploads/gallery/galleryImages-1757944707312-491842489.png",
+      "/uploads/gallery/galleryImages-1757944726880-834234476.png",
+      "/uploads/gallery/galleryImages-1757947753396-381167040.png",
+      "/uploads/gallery/galleryImages-1757947753415-316993939.png"
+    ],
+    "createdAt": "2025-09-15T13:58:27.319Z",
+    "updatedAt": "2025-09-15T14:49:13.422Z"
   }
 ]
