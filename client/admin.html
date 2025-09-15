@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Админка</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,6 +11,56 @@
   <link rel="stylesheet" href="/assets/style/main.css">
   <link rel="stylesheet" href="/assets/style/navbar.css">
   <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.css">
+
+  <!-- Локальный фикс стилями, чтобы крестик был заметным и кликабельно-агрессивным -->
+  <style>
+    .gallery-thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+    }
+    .gallery-thumb {
+      position: relative;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fafafa;
+      user-select: none;
+    }
+    .gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none; /* <--- клики проходят насквозь */
+}
+.gallery-thumb .remove-thumb {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-size: 22px;
+  line-height: 28px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 2;
+}
+
+    .gallery-thumb.drag-over {
+      outline: 2px dashed #555;
+      outline-offset: -6px;
+      background: #f0f0f0;
+    }
+    .gallery-thumb.dragging {
+      opacity: 0.6;
+    }
+    .label-small { font-size: 12px; color: #666; margin: 8px 0; }
+    .dropzone.is-dragover { outline: 2px dashed #333; }
+  </style>
 </head>
 <body>
   <div id="navbar-container"></div>
@@ -18,7 +68,7 @@
 
   <h1 class="title_page">Админ-панель</h1>
 
-  <!-- Форма логина -->
+  <!-- ЛОГИН -->
   <form id="loginForm">
     <div class="login_class">
       <input type="text" class="text_field" placeholder="Логин" id="username" required />
@@ -31,18 +81,20 @@
     <button id="openCreateModal" class="btn-primary" type="button">СОЗДАТЬ ПРОЕКТ</button>
   </div>
 
-  <!-- Кнопка выхода -->
   <div id="logoutContainer" style="display:none;">
     <button id="logoutBtn" type="button">Выйти</button>
   </div>
 
-  <!-- Модалка создания проекта -->
+  <h2 id="projectsTitle" style="display:none;">Список проектов</h2>
+  <div id="projectsList" class="admin-projects-container"></div>
+
+  <!-- МОДАЛКА СОЗДАНИЯ -->
   <div id="createModal" class="modal" style="display:none;">
     <div class="modal-content">
       <span id="closeCreateModal" class="close">&times;</span>
       <h2>Создать проект</h2>
 
-      <form id="createForm" enctype="multipart/form-data" class="card">
+      <form id="createForm" enctype="multipart/form-data" class="card" novalidate>
         <div class="form-grid">
           <div class="form-field">
             <label>Название</label>
@@ -55,22 +107,13 @@
           </div>
 
           <div class="form-field">
-            <label>Категория</label>
-            <!-- Прячем нативный select, НО БЕЗ name чтобы не дублировать поле -->
-            <select class="text_field" id="create-category-select" required style="display:none">
-              <option value="">Выберите категорию</option>
-              <option value="общественные">общественные</option>
+            <label for="create-category">Категория</label>
+            <select class="text_field" id="create-category" name="category" required>
+              <option value="" disabled selected>Выберите категорию</option>
               <option value="жилые">жилые</option>
+              <option value="общественные">общественные</option>
               <option value="коттеджи">коттеджи</option>
             </select>
-            <div class="category-select" id="createCategory"></div>
-            <input type="hidden" name="category" id="create-category-hidden" />
-          </div>
-
-          <div class="form-field">
-            <label>Теги</label>
-            <div class="tags-input" id="createTags"></div>
-            <input type="hidden" name="tags" id="create-tags-hidden" />
           </div>
 
           <div class="form-field span-2">
@@ -82,6 +125,9 @@
                 <button type="button" class="btn-secondary dz-browse">Выбрать файл</button>
               </div>
               <input type="file" name="coverImage" id="createCoverInput" accept="image/*" hidden required />
+            </div>
+            <div class="cover-preview-wrap">
+              <img id="createCoverPreview" style="max-width:220px; display:none; margin-top:10px;" alt="Предпросмотр обложки" />
             </div>
             <div style="margin-top:8px">
               <button type="button" id="createCropBtn" class="btn-secondary">Обрезать изображение</button>
@@ -115,67 +161,34 @@
     </div>
   </div>
 
-  <!-- Старая форма добавления (оставлена скрытой для совместимости, но исправлена по кодировке) -->
-  <form id="projectForm" style="display:none" enctype="multipart/form-data" class="card">
-    <fieldset disabled style="display:none">
-      <div class="new_project">
-        <input class="text_field" type="text" name="title" placeholder="Название проекта" required />
-        <input class="text_field" type="text" name="description" placeholder="Описание проекта" />
-
-        <!-- В старом select было name=category. Отключаем, чтобы не конфликтовал -->
-        <select class="text_field" required disabled>
-          <option value="">Выберите категорию</option>
-          <option value="жилые">Жилые</option>
-          <option value="общественные">Общественные</option>
-          <option value="коттеджи">Коттеджи</option>
-        </select>
-
-        <input class="text_field" type="number" name="year" placeholder="Год" min="1900" max="2099" required />
-
-        <label>Обложка проекта:</label>
-        <input class="text_field" type="file" name="coverImage" accept="image/*" required />
-
-        <label>Изображения галереи:</label>
-        <input class="text_field" type="file" name="galleryImages" accept="image/*" multiple />
-
-        <button class="text_field" type="submit">Добавить проект</button>
-      </div>
-    </fieldset>
-  </form>
-
-  <h2 id="projectsTitle" style="display:none;">Список проектов</h2>
-  <div id="projectsList" class="admin-projects-container"></div>
-
-  <!-- Модалка редактирования -->
+  <!-- МОДАЛКА РЕДАКТИРОВАНИЯ -->
   <div id="editModal" class="modal" style="display:none;">
     <div class="modal-content">
       <span id="closeEditModal" class="close">&times;</span>
       <h2>Редактировать проект</h2>
 
-      <form id="editForm" enctype="multipart/form-data">
-        <input type="hidden" name="id" id="edit-id">
-        <input type="hidden" name="existingGallery" id="existingGallery">
+      <form id="editForm" enctype="multipart/form-data" novalidate>
+        <input type="hidden" name="id" id="edit-id" />
+        <input type="hidden" name="existingGallery" id="existingGallery" />
 
-        <label>Название:</label>
-        <input type="text" name="title" id="edit-title" required>
+        <label>Название</label>
+        <input type="text" name="title" id="edit-title" required />
 
-        <label>Описание:</label>
-        <input type="text" name="description" id="edit-description">
+        <label>Описание</label>
+        <input type="text" name="description" id="edit-description" />
 
-        <label>Категория:</label>
-        <!-- Селект показываем кастомно, без name, рабочее значение в hidden -->
-        <select id="edit-category" style="display:none" required>
-          <option value="жилые">Жилые</option>
-          <option value="общественные">Общественные</option>
-          <option value="коттеджи">Коттеджи</option>
+        <label for="edit-category">Категория</label>
+        <select class="text_field" id="edit-category" name="category" required>
+          <option value="" disabled>Выберите категорию</option>
+          <option value="жилые">жилые</option>
+          <option value="общественные">общественные</option>
+          <option value="коттеджи">коттеджи</option>
         </select>
-        <div class="category-select" id="editCategory"></div>
-        <input type="hidden" name="category" id="edit-category-hidden" />
 
-        <label>Год:</label>
-        <input type="number" name="year" id="edit-year" min="1900" max="2099" required>
+        <label>Год</label>
+        <input type="number" name="year" id="edit-year" min="1900" max="2099" required />
 
-        <label>Новая обложка (если нужно заменить):</label>
+        <label>Новая обложка (если нужно заменить)</label>
         <div class="dropzone" id="editCoverDropzone">
           <div class="dz-help">
             <div class="dz-title">Перетащите файл обложки или нажмите</div>
@@ -183,12 +196,15 @@
             <button type="button" class="btn-secondary dz-browse">Выбрать файл</button>
           </div>
         </div>
-        <input type="file" name="coverImage" accept="image/*" id="editCoverInput" hidden>
+        <input type="file" name="coverImage" accept="image/*" id="editCoverInput" hidden />
+        <div class="cover-preview-wrap">
+          <img id="editCoverPreview" style="max-width:220px; display:none; margin-top:10px;" alt="Предпросмотр обложки" />
+        </div>
         <div style="margin:8px 0 12px">
           <button type="button" id="editCropBtn" class="btn-secondary">Обрезать изображение</button>
         </div>
 
-        <label>Добавить изображения в галерею:</label>
+        <label>Добавить изображения в галерею</label>
         <div class="dropzone" id="editGalleryDropzone">
           <div class="dz-help">
             <div class="dz-title">Перетащите изображения или нажмите</div>
@@ -196,22 +212,32 @@
             <button type="button" class="btn-secondary dz-browse">Добавить изображения</button>
           </div>
         </div>
-        <div id="galleryThumbs" class="gallery-thumbs"></div>
-        <div id="editNewGalleryThumbs" class="gallery-thumbs"></div>
-        <input type="file" name="galleryImages" accept="image/*" multiple id="editGalleryInput" hidden>
+        <input type="file" name="galleryImages" accept="image/*" multiple id="editGalleryInput" hidden />
+        <div class="gallery-blocks">
+          <div>
+            <div class="label-small">Текущая галерея</div>
+            <div id="galleryThumbs" class="gallery-thumbs"></div>
+          </div>
+          <div>
+            <div class="label-small">Новые изображения</div>
+            <div id="editNewGalleryThumbs" class="gallery-thumbs"></div>
+          </div>
+        </div>
 
-        <button type="submit" class="btn-primary">Сохранить изменения</button>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Сохранить изменения</button>
+        </div>
       </form>
     </div>
   </div>
 
-  <!-- Модалка кропера обложки -->
+  <!-- МОДАЛКА КРОППЕРА -->
   <div id="cropModal" class="modal" style="display:none;">
     <div class="modal-content">
       <span id="closeCropModal" class="close">&times;</span>
       <h2>Кадрирование обложки</h2>
       <div class="cropper-wrap">
-        <img id="cropImage" alt="crop" style="max-width:100%;" />
+        <img id="cropImage" alt="crop" style="max-width:100%;"/>
       </div>
       <div class="modal-actions">
         <button class="btn-secondary" id="cropCancel" type="button">Отмена</button>

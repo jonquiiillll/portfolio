@@ -1,20 +1,59 @@
 [
   {
-    "id": "1d0b8adf-202b-4504-ae7b-97da53993655",
-    "title": "Тестирование",
-    "description": "тестирование",
-    "category": "жилые",
-    "year": 2023,
-    "coverImage": "/uploads/covers/coverImage-1757944726876-338078597.png",
+    "id": "9cac4e1a-37e5-4de9-bc68-a6483e1f2dba",
+    "title": "тестирование2",
+    "description": "описание2",
+    "category": "общественные",
+    "year": 2022,
+    "coverImage": "/uploads/covers/coverImage-1757962837005-224857321.jpg",
+    "galleryImages": [],
+    "tags": [],
+    "createdAt": "2025-09-15T19:00:37.245Z",
+    "updatedAt": "2025-09-15T19:01:30.387Z"
+  },
+  {
+    "id": "a01c65ea-1c7f-475f-8669-3c570b1258b2",
+    "title": "тест картинки",
+    "description": "проиве",
+    "category": "коттеджи",
+    "year": 2025,
+    "coverImage": "/uploads/covers/coverImage-1757964385301-113400076.jpg",
     "galleryImages": [
-      "/uploads/gallery/galleryImages-1757944707312-491842489.png",
-      "/uploads/gallery/galleryImages-1757944707305-979161915.png",
-      "/uploads/gallery/galleryImages-1757947753396-381167040.png",
-      "/uploads/gallery/galleryImages-1757944726880-834234476.png",
-      "/uploads/gallery/galleryImages-1757947753415-316993939.png"
+      "/galleryImages-1757964385301-971262763.jpg"
     ],
-    "createdAt": "2025-09-15T13:58:27.319Z",
-    "updatedAt": "2025-09-15T16:10:24.439Z",
-    "tags": []
+    "tags": [],
+    "createdAt": "2025-09-15T19:26:25.304Z",
+    "updatedAt": "2025-09-15T19:30:24.693Z"
+  },
+  {
+    "id": "ed7b3c5b-ec9d-482a-8945-8c5efdd86909",
+    "title": "тест 4",
+    "description": "описание",
+    "category": "жилые",
+    "year": 2020,
+    "coverImage": "/uploads/covers/coverImage-1757964686480-935252936.jpg",
+    "galleryImages": [
+      "/galleryImages-1757964686481-60313905.jpg",
+      "/galleryImages-1757964686489-651588024.jpg"
+    ],
+    "tags": [],
+    "createdAt": "2025-09-15T19:31:26.494Z",
+    "updatedAt": "2025-09-15T19:31:34.266Z"
+  },
+  {
+    "id": "d3384dd3-efd7-423c-9e66-712a3513ed8f",
+    "title": "Последний тест",
+    "description": "описание проекта",
+    "category": "жилые",
+    "year": 2025,
+    "coverImage": "/uploads/covers/coverImage-1757965167716-783606800.jpg",
+    "galleryImages": [
+      "/galleryImages-1757965167718-118218117.jpg",
+      "/galleryImages-1757965167721-577256831.jpg",
+      "/galleryImages-1757965167723-54285586.jpg"
+    ],
+    "tags": [],
+    "createdAt": "2025-09-15T19:39:27.727Z",
+    "updatedAt": "2025-09-15T19:39:40.413Z"
   }
 ]

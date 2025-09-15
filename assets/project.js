@@ -1,5 +1,13 @@
 // 📄 project.js
 
+// Нормализация путей картинок
+function normalizeImageUrl(src) {
+  if (!src) return '';
+  if (src.startsWith('http') || src.startsWith('/uploads/')) return src;
+  if (src.startsWith('/galleryImages')) return '/uploads/gallery' + src;
+  return '/uploads/gallery/' + src.replace(/^\/+/, '');
+}
+
 async function loadProject() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
@@ -24,15 +32,17 @@ async function loadProject() {
     gallery.innerHTML = '';
     (project.galleryImages || []).forEach((src, idx) => {
       const img = document.createElement('img');
-      img.src = src;
+      img.src = normalizeImageUrl(src);
       img.alt = project.title || `Изображение ${idx + 1}`;
       img.className = 'gallery-image';
-      img.addEventListener('click', () => openLightbox(idx, project.galleryImages));
+      img.addEventListener('click', () =>
+        openLightbox(idx, (project.galleryImages || []).map(normalizeImageUrl))
+      );
       gallery.appendChild(img);
     });
 
-    // сохраняем текущие картинки для лайтбокса
-    window._galleryImages = project.galleryImages || [];
+    // сохраняем текущие картинки для лайтбокса (уже нормализованные)
+    window._galleryImages = (project.galleryImages || []).map(normalizeImageUrl);
     window._currentIndex = 0;
   } catch (err) {
     console.error('Ошибка загрузки проекта:', err);
@@ -41,9 +51,11 @@ async function loadProject() {
 
 function openLightbox(index, images) {
   window._currentIndex = index;
+  window._galleryImages = images.map(normalizeImageUrl);
+
   const lightbox = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-image');
-  img.src = images[index];
+  img.src = window._galleryImages[index];
   lightbox.style.display = 'flex';
 }
 
@@ -63,6 +75,21 @@ function scrollGallery(dir) {
   const container = document.getElementById('gallery');
   container.scrollBy({ left: dir * 300, behavior: 'smooth' });
 }
+
+// ================== Клавиатурное управление ==================
+document.addEventListener('keydown', (e) => {
+  const lightbox = document.getElementById('lightbox');
+  if (lightbox.style.display !== 'flex') return; // игнорируем, если лайтбокс закрыт
+
+  if (e.key === 'ArrowLeft') {
+    navigateLightbox(-1);
+  } else if (e.key === 'ArrowRight') {
+    navigateLightbox(1);
+  } else if (e.key === 'Escape') {
+    closeLightbox();
+  }
+});
+// =============================================================
 
 window.addEventListener('DOMContentLoaded', loadProject);
 
